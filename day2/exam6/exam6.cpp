@@ -1,8 +1,8 @@
-// exam5.cpp : 응용 프로그램에 대한 진입점을 정의합니다.
+// exam6.cpp : 응용 프로그램에 대한 진입점을 정의합니다.
 //
 
 #include "stdafx.h"
-#include "exam5.h"
+#include "exam6.h"
 
 #define MAX_LOADSTRING 100
 
@@ -29,7 +29,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_EXAM5, szWindowClass, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDC_EXAM6, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
     // 응용 프로그램 초기화를 수행합니다.
@@ -38,7 +38,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_EXAM5));
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_EXAM6));
 
     MSG msg;
 
@@ -73,10 +73,10 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.cbClsExtra     = 0;
     wcex.cbWndExtra     = 0;
     wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_EXAM5));
+    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_EXAM6));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_EXAM5);
+    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_EXAM6);
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -147,23 +147,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
             // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다.
-			
-			//별
-			MoveToEx(hdc, 300, 80, NULL);
-			LineTo(hdc, 200, 350);
-			LineTo(hdc, 450, 180);
-			LineTo(hdc, 150, 180);
-			LineTo(hdc, 400, 350);
-			LineTo(hdc, 300, 80);
-            
-			//정사각형
-			MoveToEx(hdc, 600, 100, NULL);
-			LineTo(hdc, 600, 300);
-			LineTo(hdc, 800, 300);
-			LineTo(hdc, 800, 100);
-			LineTo(hdc, 600, 100);
 
-			EndPaint(hWnd, &ps);
+			Ellipse(hdc, 100, 100, 300, 300);
+			Ellipse(hdc, 200, 200, 400, 300);
+			Rectangle(hdc, 400, 400, 500, 500);
+
+            EndPaint(hWnd, &ps);
         }
         break;
     case WM_DESTROY:
