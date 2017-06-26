@@ -131,13 +131,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		CreateWindow(L"edit", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | CBS_AUTOHSCROLL, 120, 10, 100, 25, hWnd, (HMENU)3002, hInst, NULL);
 
-		CreateWindow(L"button", L"더하기", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 10, 10+25+5, 100, 25, hWnd, (HMENU)4001, hInst, NULL);
+		CreateWindow(L"button", L"더하기", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 10, 40, 100, 25, hWnd, (HMENU)4001, hInst, NULL);
 
-		CreateWindow(L"button", L"빼기", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 120, 10 + 25 + 5, 100, 25, hWnd, (HMENU)4002, hInst, NULL);
+		CreateWindow(L"button", L"빼기", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 120, 40, 100, 25, hWnd, (HMENU)4002, hInst, NULL);
 
-		CreateWindow(L"button", L"곱하기", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 230, 10 + 25 + 5, 100, 25, hWnd, (HMENU)4003, hInst, NULL);
+		CreateWindow(L"button", L"곱하기", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 230, 40, 100, 25, hWnd, (HMENU)4003, hInst, NULL);
 
-		CreateWindow(L"button", L"나누기", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 340, 10 + 25 + 5, 100, 25, hWnd, (HMENU)4004, hInst, NULL);
+		CreateWindow(L"button", L"나누기", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 340, 40, 100, 25, hWnd, (HMENU)4004, hInst, NULL);
 	}
 		break;
 
