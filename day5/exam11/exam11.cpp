@@ -180,15 +180,27 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 		case VK_UP:
 			g_nHeroPosY -= 5;
+			if (g_nHeroPosY < 0 ) {
+				g_nHeroPosY = g_nHeroPosY + 5;
+			}
 			break;
 		case VK_DOWN:
 			g_nHeroPosY += 5;
+			if (g_nHeroPosY > 500 - 64) {
+				g_nHeroPosY = g_nHeroPosY - 5;
+			}
 			break;
 		case VK_LEFT:
 			g_nHeroPosX -= 5;
+			if (g_nHeroPosX < 0) {
+				g_nHeroPosX = g_nHeroPosX + 5;
+			}
 			break;
 		case VK_RIGHT:
 			g_nHeroPosX += 5;
+			if (g_nHeroPosX > 500 - 64) {
+				g_nHeroPosX = g_nHeroPosX - 5;
+			}
 			break;
 		default:
 			break;
