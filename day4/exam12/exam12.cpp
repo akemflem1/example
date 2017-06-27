@@ -7,15 +7,15 @@
 int main()
 {
 	//char strTemp[5] = "Hani";
-	char strTemp[5];
+	//char strTemp[5];
 
-	strTemp[0] = 'H';
-	strTemp[1] = 'a';
-	strTemp[2] = 'n';
-	strTemp[3] = 'i';
-	strTemp[4] = '\0';
+	//strTemp[0] = 'H';
+	//strTemp[1] = 'a';
+	//strTemp[2] = 'n';
+	//strTemp[3] = 'i';
+	//strTemp[4] = '\0';
 
-	printf("%s \n", strTemp);
+	//printf("%s \n", strTemp);
 
 	char szBuf[256];
 	printf("당신의 이름은 무엇입니까?");
