@@ -148,7 +148,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             HDC hdc = BeginPaint(hWnd, &ps);
             // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다.
 
-			unsigned char uch;
+			unsigned char uch; //unsined 양수만 쓰겠다라는 표현
 			unsigned short ushort;
 			unsigned int unit;
 			uch = 0xff;// 255;
@@ -167,6 +167,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			swprintf(szBuf, 256, L"%d , %d , %u ", uch,ushort,unit);
 			TextOut(hdc, 0, 24, szBuf, wcslen(szBuf));
 			//OutputDebugString(szBuf);
+
+			char testSignedByte, testSignedByte2;
+			testSignedByte = 127;
+			testSignedByte2 = 129;
+
+			swprintf(szBuf, 256, L"%d , %d , %d ", testSignedByte, (char)(testSignedByte + 1), (char)(testSignedByte + 2));
+			TextOut(hdc, 0, 48, szBuf, wcslen(szBuf));
+
+
 
             EndPaint(hWnd, &ps);
         }
