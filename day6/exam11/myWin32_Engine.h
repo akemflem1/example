@@ -1,3 +1,5 @@
+#pragma once
+
 void makeMiniEditBox(HWND hWnd, int nPosX, int nPosY, int nHandle)
 {
 	CreateWindow(L"edit", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER, nPosX, nPosY, 100, 25, hWnd, (HMENU)nHandle, hInst, NULL);

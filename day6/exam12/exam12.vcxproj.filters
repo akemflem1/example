@@ -27,7 +27,7 @@
     <ClInclude Include="Resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="exam11.h">
+    <ClInclude Include="exam12.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -35,12 +35,12 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="exam11.cpp">
+    <ClCompile Include="exam12.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="exam11.rc">
+    <ResourceCompile Include="exam12.rc">
       <Filter>리소스 파일</Filter>
     </ResourceCompile>
   </ItemGroup>
@@ -48,7 +48,7 @@
     <Image Include="small.ico">
       <Filter>리소스 파일</Filter>
     </Image>
-    <Image Include="exam11.ico">
+    <Image Include="exam12.ico">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

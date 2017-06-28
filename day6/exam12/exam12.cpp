@@ -1,9 +1,8 @@
-// exam11.cpp : 응용 프로그램에 대한 진입점을 정의합니다.
+// exam12.cpp : 응용 프로그램에 대한 진입점을 정의합니다.
 //
 
 #include "stdafx.h"
-#include "exam11.h"
-
+#include "exam12.h"
 
 #define MAX_LOADSTRING 100
 
@@ -32,7 +31,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_EXAM11, szWindowClass, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDC_EXAM12, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
     // 응용 프로그램 초기화를 수행합니다.
@@ -41,7 +40,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_EXAM11));
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_EXAM12));
 
     MSG msg;
 
@@ -76,10 +75,10 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.cbClsExtra     = 0;
     wcex.cbWndExtra     = 0;
     wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_EXAM11));
+    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_EXAM12));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_EXAM11);
+    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_EXAM12);
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -114,8 +113,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    return TRUE;
 }
 
-
-
 //
 //  함수: WndProc(HWND, UINT, WPARAM, LPARAM)
 //
@@ -133,13 +130,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 	{
 		mywin32_engine::makeMiniEditBox(hWnd, 0, 0, 3001);
-		mywin32_engine::makeMiniEditBox(hWnd, 110, 0, 3002);
-		mywin32_engine::makeMiniEditBox(hWnd, 220, 0, 3003);
-		mywin32_engine::makeMiniEditBox(hWnd, 0, 40, 3004);
-		mywin32_engine::makeMiniEditBox(hWnd, 110, 40, 3005);
-
-		mywin32_engine::makeSimpleButton(hWnd,L"OK", 330, 0, 4001);
-
+		mywin32_engine::makeSimpleButton(hWnd, L"Test", 0, 30, 4001);
 	}
 		break;
     case WM_COMMAND:
@@ -156,14 +147,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 break;
 			case 4001:
 			{
-				int nEngScore = mywin32_engine::GetControlValueInt(hWnd, 3001);
-				int nKorScore = mywin32_engine::GetControlValueInt(hWnd, 3002);
-				int nMatScore = mywin32_engine::GetControlValueInt(hWnd, 3003);
-				
-				int nSum = nEngScore + nKorScore + nMatScore;
-
-				mywin32_engine::SetControlValueInt(hWnd, 3004, nSum);
-				mywin32_engine::SetControlValueInt(hWnd, 3005, nSum / 3);
+				mywin32_engine::SetControlValueDouble(hWnd, 3001, 3.14);
 			}
 				break;
             default:
@@ -176,9 +160,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
             // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다.
-
-
-
             EndPaint(hWnd, &ps);
         }
         break;
