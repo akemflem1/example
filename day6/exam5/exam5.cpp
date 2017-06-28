@@ -147,7 +147,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case 4001:
 			{
 				TCHAR szBuf[256];
-				int times = 1, nIndex = 1;
+				int times, nIndex = 1;
 				GetWindowText(GetDlgItem(hWnd, 3001), szBuf, 256);
 				times = _wtoi(szBuf);
 				HDC hdc = GetDC(hWnd);
