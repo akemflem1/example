@@ -1,14 +1,8 @@
-// exam11.cpp : 응용 프로그램에 대한 진입점을 정의합니다.
+// exam5.cpp : 응용 프로그램에 대한 진입점을 정의합니다.
 //
 
 #include "stdafx.h"
-#include "exam11.h"
-
-#include <Windows.h>
-#include <ObjIdl.h>
-#include <gdiplus.h>
-using namespace Gdiplus;
-#pragma comment(lib,"Gdiplus.lib")
+#include "exam5.h"
 
 #define MAX_LOADSTRING 100
 
@@ -23,43 +17,6 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
-int g_nHeroPosX = 100;
-int g_nHeroPosY = 100;
-int move = 10;
-void GDIPLUS_Loop(MSG &msg) //중요
-{
-	GdiplusStartupInput gdiplusStartupInput;
-	ULONG_PTR gdiplusToken;
-	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-
-	{
-		bool bQuit = false;
-		SolidBrush brushBlack(Color(0, 0, 0));
-		while (bQuit == false) {
-			if (PeekMessage(&msg,NULL,NULL,NULL,PM_REMOVE)) {
-				if (msg.message == WM_QUIT) {
-					bQuit = true;
-				}
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-			}
-			else {
-				HDC hdc = GetDC(msg.hwnd);
-				
-				Graphics graphics(hdc);
-				SolidBrush brushRandom(Color(rand() % 256, rand() % 256, rand() % 256));
-				
-				graphics.FillRectangle(&brushBlack, 0, 0, 500, 500);
-				graphics.FillRectangle(&brushRandom, g_nHeroPosX , g_nHeroPosY , 60, 60);
-
-				ReleaseDC(msg.hwnd, hdc);
-			}
-		}
-	}
-
-	GdiplusShutdown(gdiplusToken);
-}
-
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPWSTR    lpCmdLine,
@@ -72,7 +29,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_EXAM11, szWindowClass, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDC_EXAM5, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
     // 응용 프로그램 초기화를 수행합니다.
@@ -81,15 +38,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_EXAM11));
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_EXAM5));
 
     MSG msg;
 
-	
-	// 기본 메시지 루프입니다.
-	GDIPLUS_Loop(msg);
-    /*
-	while (GetMessage(&msg, nullptr, 0, 0))
+    // 기본 메시지 루프입니다.
+    while (GetMessage(&msg, nullptr, 0, 0))
     {
         if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
         {
@@ -97,7 +51,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             DispatchMessage(&msg);
         }
     }
-	*/
+
     return (int) msg.wParam;
 }
 
@@ -119,10 +73,10 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.cbClsExtra     = 0;
     wcex.cbWndExtra     = 0;
     wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_EXAM11));
+    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_EXAM5));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_EXAM11);
+    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_EXAM5);
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -171,44 +125,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
-	case WM_KEYDOWN:
+	case WM_CREATE:
 	{
-		TCHAR szBuf[256];
-		swprintf(szBuf, 256, L"%d \n", wParam);
-		OutputDebugString(szBuf);
+		CreateWindow(L"edit", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER, 0, 0, 100, 25, hWnd, (HMENU)3001, hInst, NULL);
+		CreateWindow(L"button", L"구구단", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 120, 0, 100, 25, hWnd, (HMENU)4001, hInst, NULL);
 
-		switch (wParam)
-		{
-		case VK_UP:
-			g_nHeroPosY -= move;
-			if (g_nHeroPosY < 0 ) {
-				g_nHeroPosY = g_nHeroPosY + move;
-			}
-			break;
-		case VK_DOWN:
-			g_nHeroPosY += move;
-			if (g_nHeroPosY > 500 - 60) {
-				g_nHeroPosY = g_nHeroPosY - move;
-			}
-			break;
-		case VK_LEFT:
-			g_nHeroPosX -= move;
-			if (g_nHeroPosX < 0) {
-				g_nHeroPosX = g_nHeroPosX + move;
-			}
-			break;
-		case VK_RIGHT:
-			g_nHeroPosX += move;
-			if (g_nHeroPosX > 500 - 60) {
-				g_nHeroPosX = g_nHeroPosX - move;
-			}
-			break;
-		default:
-			break;
-		}
 	}
 		break;
-
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
@@ -221,6 +144,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             case IDM_EXIT:
                 DestroyWindow(hWnd);
                 break;
+			case 4001:
+			{
+				TCHAR szBuf[256];
+				int times = 1, nIndex = 1;
+				GetWindowText(GetDlgItem(hWnd, 3001), szBuf, 256);
+				times = _wtoi(szBuf);
+				HDC hdc = GetDC(hWnd);
+
+				Rectangle(hdc, 0, 25, 100, 300);
+				while (nIndex < 10) {
+					swprintf(szBuf, 256, L"%d * %d = %d", times, nIndex, times*nIndex);
+					TextOut(hdc, 10, 30 * nIndex, szBuf, wcslen(szBuf));
+					nIndex += 1;
+				}			
+
+				ReleaseDC(hWnd, hdc);
+			}
+				break;
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
             }
