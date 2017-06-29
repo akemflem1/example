@@ -11,8 +11,8 @@ int main()
 	for (int i = 0; i < sizeof(ary) / sizeof(ary[0]); i++) {
 		if (i < (sizeof(ary) / sizeof(ary[0])) / 2) {
 			buf = ary[i];
-			ary[i] = ary[(sizeof(ary) / sizeof(ary[0])) - 1 - i];
-			ary[(sizeof(ary) / sizeof(ary[0])) - 1 - i] = buf;
+			ary[i] = ary[(sizeof(ary) / sizeof(ary[0])) - (1 + i)];
+			ary[(sizeof(ary) / sizeof(ary[0])) - (1 + i)] = buf;
 		}
 		printf("%d \n", ary[i]);
 	}
