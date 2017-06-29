@@ -20,14 +20,11 @@ int main()
 		int nIndex;
 		printf("삭제할 위치를 입력하세요 : ");
 		scanf("%d", &nIndex);
-		
-		for (int i = nIndex ; i < sizeof(nBuf) / sizeof(nBuf[0]); i++) {
+		if (nIndex >= 8) bLoop = false;
+
+		for (int i = nIndex ; i < (sizeof(nBuf) / sizeof(nBuf[0])-1); i++) {
 			nBuf[i] = nBuf[i + 1];
-			nBuf[sizeof(nBuf) / sizeof(nBuf[0])] = 0;
-
 		}
-
-		//nBuf[nIndex] = nBuf[nIndex + 1];
 
 		dumpBuf(nBuf,sizeof(nBuf)/sizeof(nBuf[0]));
 	}
