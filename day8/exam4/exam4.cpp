@@ -152,15 +152,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			{
 				TCHAR szBuf[256];
 				GetWindowText(GetDlgItem(hWnd, 3001), szBuf, 256);
-				/*
+				
+				int nSum = 0;
+				
 				TCHAR *pwc;
 				pwc = wcstok(szBuf, L",");
-
+				nSum += _wtoi(pwc);
 				while (pwc != NULL) {
-					pwc = wcstok(NULL, L",");
+					pwc = wcstok(NULL, L", #");
+					if (pwc != NULL) {
+						nSum += _wtoi(pwc);
+					}
 				}
-				*/
-				
+				mywin32_engine::SetControlValueInt(hWnd, 3002, nSum);
+
+				/*
 				TCHAR szTemp[64];
 				int nTempIndex = 0;
 				int nSum = 0;
@@ -182,6 +188,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				mywin32_engine::SetControlValueInt(hWnd, 3002, nSum);
 				mywin32_engine::SetControlValueInt(hWnd, 3003, nSum / nCount);
+				*/
 			}
 				break;
 			
