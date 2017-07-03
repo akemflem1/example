@@ -12,9 +12,11 @@
 #define IDI_SMALL                       108
 #define IDC_EXAM9                       109
 #define IDR_MAINFRAME                   128
-#define IDD_DIALOG1                     129
 #define IDD_DIALOG_INS                  129
+#define IDD_DIALOG_VIEW                 130
 #define IDC_EDIT_INS                    1000
+#define IDC_EDIT1                       1001
+#define IDC_EDIT_SEL_INDEX              1001
 #define ID_MEMO_32771                   32771
 #define ID_MEMO_32772                   32772
 #define ID_MEMO_32773                   32773
@@ -30,9 +32,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        130
+#define _APS_NEXT_RESOURCE_VALUE        131
 #define _APS_NEXT_COMMAND_VALUE         32779
-#define _APS_NEXT_CONTROL_VALUE         1001
+#define _APS_NEXT_CONTROL_VALUE         1002
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif

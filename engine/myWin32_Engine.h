@@ -16,22 +16,22 @@ namespace mywin32_engine
 			return nCount;
 		}
 	}
-	HANDLE makeTextBox(HWND hWnd, int nPosX, int nPosY, int nWidth, int nHeight, int nHandle)
+	HWND makeTextBox(HWND hWnd, int nPosX, int nPosY, int nWidth, int nHeight, int nHandle)
 	{
 		return CreateWindow(L"static",L"", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL, nPosX, nPosY, nWidth, nHeight, hWnd, (HMENU)nHandle, hInst, NULL);
 	}
 
-	HANDLE makeMiniEditBox(HWND hWnd, int nPosX, int nPosY, int nHandle)
+	HWND makeMiniEditBox(HWND hWnd, int nPosX, int nPosY, int nHandle)
 	{
 		return CreateWindow(L"edit", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL, nPosX, nPosY, 100, 25, hWnd, (HMENU)nHandle, hInst, NULL);
 	}
 
-	HANDLE makeEditBox(HWND hWnd, int nPosX, int nPosY, int nWidth, int nHandle)
+	HWND makeEditBox(HWND hWnd, int nPosX, int nPosY, int nWidth, int nHandle)
 	{
 		return CreateWindow(L"edit", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_AUTOHSCROLL, nPosX, nPosY, nWidth, 25, hWnd, (HMENU)nHandle, hInst, NULL);
 	}
 
-	HANDLE makeSimpleButton(HWND hWnd, TCHAR *pszText, int nPosX, int nPosY, int nHandle)
+	HWND makeSimpleButton(HWND hWnd, TCHAR *pszText, int nPosX, int nPosY, int nHandle)
 	{
 		return CreateWindow(L"button", pszText, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, nPosX, nPosY, 100, 25, hWnd, (HMENU)nHandle, hInst, NULL);
 	}

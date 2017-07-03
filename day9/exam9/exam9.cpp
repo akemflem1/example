@@ -17,9 +17,12 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK procMemoIns(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK procMemoView(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
 #include "../../engine/mywin32_engine.h"
 TCHAR g_szMemoDB[1024];
+int g_nMemoDBTailIndex = 0;
+HWND g_hOutputLogBox;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
@@ -131,7 +134,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_CREATE:
 	{
-		mywin32_engine::makeTextBox(hWnd, 0, 0, 320, 240, 5001);
+		g_hOutputLogBox = mywin32_engine::makeTextBox(hWnd, 0, 0, 320, 240, 5001);
 	}
 		break;
 	case WM_COMMAND:
@@ -141,9 +144,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		switch (wmId)
 		{
 		case IDM_MEMO_INS: {
-			DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG_INS), hWnd, procMemoIns);
-
-			SetWindowText(GetDlgItem(hWnd, 5001), g_szMemoDB);
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG_INS), hWnd, procMemoIns);	
 		}
 			break;
 		case IDM_MEMO_DEL: {
@@ -151,7 +152,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 			break;
 		case IDM_MEMO_VIEW: {
-
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG_VIEW), hWnd, procMemoView);
 		}
 			break;
 		case IDM_ABOUT:
@@ -217,10 +218,65 @@ INT_PTR CALLBACK procMemoIns(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 			TCHAR szBuf[256];
 			GetWindowText(GetDlgItem(hDlg, IDC_EDIT_INS),szBuf,256);
 			
+			if (g_nMemoDBTailIndex > 0) {
+				g_szMemoDB[g_nMemoDBTailIndex ++] = L',';
+			}
 			int i = 0;
 			for (i = 0; szBuf[i] != 0x00; i++) {
-				g_szMemoDB[i] = szBuf[i];
+				g_szMemoDB[g_nMemoDBTailIndex ++] = szBuf[i];
 			}
+			//g_szMemoDB[g_nMemoDBTailIndex + i] = L',';
+			//g_nMemoDBTailIndex += i;
+			SetWindowText(g_hOutputLogBox, g_szMemoDB);
+
+			EndDialog(hDlg, LOWORD(wParam));
+			return (INT_PTR)TRUE;
+		}
+		else if (LOWORD(wParam) == IDCANCEL) {
+			EndDialog(hDlg, LOWORD(wParam));
+			return (INT_PTR)FALSE;
+		}
+		break;
+	}
+	return (INT_PTR)FALSE;
+}
+
+INT_PTR CALLBACK procMemoView(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(lParam);
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		return (INT_PTR)TRUE;
+
+	case WM_COMMAND:
+		if (LOWORD(wParam) == IDOK)
+		{
+			TCHAR szBuf[256];
+			GetWindowText(GetDlgItem(hDlg, IDC_EDIT_SEL_INDEX), szBuf, 256);
+			int nSel = _wtoi(szBuf);
+			
+			int nCount = 0;
+			int i = 0;
+
+			if (nSel > 0) {
+				while (g_szMemoDB[i] != 0x00) {
+					if (g_szMemoDB[i] == L',') {
+						nCount++;
+					}
+					if (nCount == nSel) break;
+					i++;
+				}
+				i++;
+			}
+		
+			int j = 0;
+			while (g_szMemoDB[i] != 0x00 && g_szMemoDB[i] != L',') {
+				szBuf[j++] = g_szMemoDB[i++];
+			}
+			szBuf[j] = 0x00;
+
+			SetWindowText(g_hOutputLogBox, szBuf);
 
 			EndDialog(hDlg, LOWORD(wParam));
 			return (INT_PTR)TRUE;
