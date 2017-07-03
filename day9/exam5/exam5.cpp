@@ -19,6 +19,7 @@ int main()
 
 	int ary2[5] = { 10,20,30,40,50 };
 
+	//중간을 시작위치로 설정
 	int *ap = ary2 + 2;
 
 	printf("%d %d \n", *(ap + 1), *(ap + 2));
