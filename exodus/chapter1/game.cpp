@@ -121,6 +121,8 @@ void GDIPLUS_Loop(MSG &msg)
 
 												   //Image imgitem(L"../../res/Items.png");
 
+
+
 		while (!quit) {
 
 			if (PeekMessage(&msg, NULL, NULL, NULL, PM_REMOVE))
@@ -148,6 +150,7 @@ void GDIPLUS_Loop(MSG &msg)
 							if (g_nItemSwitchXpos == g_nPlayerXpos && g_nItemSwitchYpos == g_nPlayerYpos) {
 								g_nItemSwitchStatus = 1;
 								g_MapAttrBlock[8 * 7 + 2] = 0; // (7,2) 위치 막힘제거
+								g_MapRoom1[8 * 7 + 2] = 14;
 							}
 						}
 
@@ -171,7 +174,7 @@ void GDIPLUS_Loop(MSG &msg)
 							0, 64 * 2, 64, 64, //원본위치 
 							UnitPixel
 						);
-
+						
 						//각종 아이텝, 트리거, 기구물 그리기
 						if (g_nItemSwitchStatus == 0) {
 							drawTileIndex(graphBackBuffer, &imgBasicTile, g_nItemSwitchXpos, g_nItemSwitchYpos, 47);
@@ -193,6 +196,7 @@ void GDIPLUS_Loop(MSG &msg)
 
 			}
 		}
+		
 	}
 
 	//--------------------------------------

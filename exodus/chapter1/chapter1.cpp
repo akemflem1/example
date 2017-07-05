@@ -121,7 +121,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	switch (message)
 	{
 	case WM_KEYDOWN:
+	{
+		if (g_dwGdiLoopFsm == 0) break;
 		eventKeyDown(wParam);
+	}
 		break;
 	case WM_COMMAND:
 	{
