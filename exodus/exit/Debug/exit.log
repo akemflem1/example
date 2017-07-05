@@ -1,0 +1,7 @@
+﻿  exit.cpp
+c:\users\kict-02\desktop\unity 오본환\engine\mywin32_engine.h(8): warning C4996: 'wcstok': wcstok has been changed to conform with the ISO C standard, adding an extra context parameter. To use the legacy Microsoft wcstok, define _CRT_NON_CONFORMING_WCSTOK.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\corecrt_wstring.h(261): note: 'wcstok' 선언을 참조하십시오.
+c:\users\kict-02\desktop\unity 오본환\engine\mywin32_engine.h(11): warning C4996: 'wcstok': wcstok has been changed to conform with the ISO C standard, adding an extra context parameter. To use the legacy Microsoft wcstok, define _CRT_NON_CONFORMING_WCSTOK.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\corecrt_wstring.h(261): note: 'wcstok' 선언을 참조하십시오.
+  exit.vcxproj -> C:\Users\KICT-02\Desktop\unity 오본환\exodus\Debug\exit.exe
+  exit.vcxproj -> C:\Users\KICT-02\Desktop\unity 오본환\exodus\Debug\exit.pdb (Partial PDB)
