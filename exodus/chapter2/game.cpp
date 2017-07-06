@@ -6,40 +6,54 @@ using namespace Gdiplus;
 #pragma comment (lib,"Gdiplus.lib")
 
 
-int g_MapRoom1[] = {
-	3, 0, 0, 0, 0, 0, 0, 3,
-	1,14,14,14,14,14,14, 1,
-	1,14,14,14,14,14,14, 1,
-	1,14,14,14,14,14,14, 1,
-	1,14,14,14,14,14,14, 1,
-	1,14,14,14,14,14,14, 1,
-	1,14,14,14,14,14,14, 1,
-	2, 2, 48, 2, 2, 2, 2, 2
+int g_MapRooms[][64] = { 
+	{
+		3, 0, 0, 0, 0, 0, 0, 3,
+		1,14,14,14,14,14,14, 1,
+		1,14,14,14,14,14,14, 1,
+		1,14,14,14,14,14,14, 1,
+		1,14,14,14,14,14,14, 1,
+		1,14,14,14,14,14,14, 1,
+		1,14,14,14,14,14,14, 1,
+		2, 2, 48, 2, 2, 2, 2, 2
+	},
+	{
+		3, 0,48, 0, 0, 0, 0, 3,
+		1,14,14,14,14,14,14, 1,
+		1,14,14,14,14,14,14, 1,
+		1,14,14,14,14,14,14, 1,
+		1,14,14,14,14,14,14, 1,
+		1,14,14,14,14,14,14, 1,
+		1,14,14,14,14,14,14, 1,
+		2, 2, 2, 2, 2, 2, 2, 2
+	} 
 };
 
-int g_MapRoom2[] = {
-	3, 0,48, 0, 0, 0, 0, 3,
-	1,14,14,14,14,14,14, 1,
-	1,14,14,14,14,14,14, 1,
-	1,14,14,14,14,14,14, 1,
-	1,14,14,14,14,14,14, 1,
-	1,14,14,14,14,14,14, 1,
-	1,14,14,14,14,14,14, 1,
-	2, 2, 2, 2, 2, 2, 2, 2
+int g_MapAttrBlock[][64] = {
+	{
+		1,1,1,1,1,1,1,1,
+		1,0,0,0,0,0,0,1,
+		1,0,0,0,0,0,0,1,
+		1,0,0,0,0,0,0,1,
+		1,0,0,0,0,0,0,1,
+		1,0,0,0,0,0,0,1,
+		1,0,0,0,0,0,0,1,
+		1,1,1,1,1,1,1,1
+	},
+	{
+		1,1,1,1,1,1,1,1,
+		1,0,0,0,0,0,0,1,
+		1,0,0,0,0,0,0,1,
+		1,0,0,0,0,0,0,1,
+		1,0,0,0,0,0,0,1,
+		1,0,0,0,0,0,0,1,
+		1,0,0,0,0,0,0,1,
+		1,1,1,1,1,1,1,1
+	}
 };
 
-int g_MapAttrBlock[] = {
-	1,1,1,1,1,1,1,1,
-	1,0,0,0,0,0,0,1,
-	1,0,0,0,0,0,0,1,
-	1,0,0,0,0,0,0,1,
-	1,0,0,0,0,0,0,1,
-	1,0,0,0,0,0,0,1,
-	1,0,0,0,0,0,0,1,
-	1,1,1,1,1,1,1,1
-};
-
-int *g_ptrCurrentMap;
+//int *g_ptrCurrentMap;
+int g_nCurrentStage;
 int g_nPlayerXpos;
 int g_nPlayerYpos;
 
@@ -55,7 +69,8 @@ const int g_nTileXCount = 8;
 DWORD g_dwGdiLoopFsm = 0; //루프상태제어
 void StartGame()
 {
-	g_ptrCurrentMap = g_MapRoom1;
+
+	g_nCurrentStage = 0;
 	g_nPlayerXpos = 3;
 	g_nPlayerYpos = 3;
 	g_dwGdiLoopFsm = 10; //랜더링 활성화
@@ -63,7 +78,7 @@ void StartGame()
 
 int getMapBlockAttr(int mx, int my)
 {
-	return g_MapAttrBlock[my * 8 + mx];
+	return g_MapAttrBlock[g_nCurrentStage][my * 8 + mx];
 }
 
 void eventKeyDown(WPARAM wParam)
@@ -169,12 +184,13 @@ void GDIPLUS_Loop(MSG &msg)
 						if (g_nItemSwitchStatus == 0) {
 							if (g_nItemSwitchXpos == g_nPlayerXpos && g_nItemSwitchYpos == g_nPlayerYpos) {
 								g_nItemSwitchStatus = 1;
-								g_MapAttrBlock[8 * 7 + 2] = 0; // (7,2) 위치 막힘제거
-								g_MapRoom1[8 * 7 + 2] = 50; // 문 이미지 변경
+								g_MapAttrBlock[g_nCurrentStage][8 * 7 + 2] = 0; // (7,2) 위치 막힘제거
+								g_MapRooms[g_nCurrentStage][8 * 7 + 2] = 50; // 문 이미지 변경
 							}
 						}
-						if (g_ptrCurrentMap[g_nPlayerYpos * 8 + g_nPlayerXpos] == 50) {
-							g_ptrCurrentMap = g_MapRoom2;
+						if (g_MapRooms[g_nCurrentStage][g_nPlayerYpos * 8 + g_nPlayerXpos] == 50) {
+							//g_ptrCurrentMap = g_MapRoom2;
+							g_nCurrentStage += 1; //다음판으로 이동
 							g_nPlayerXpos = 3;
 							g_nPlayerYpos = 3;
 						}
@@ -189,7 +205,7 @@ void GDIPLUS_Loop(MSG &msg)
 						for (int ix = 0; ix < 8; ix++) {
 							for (int iy = 0; iy < 8; iy++) {
 								drawTile(graphBackBuffer, &imgBasicTile,
-									ix, iy, g_ptrCurrentMap);
+									ix, iy, g_MapRooms[g_nCurrentStage]);
 							}
 						}
 
