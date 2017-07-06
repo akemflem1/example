@@ -131,6 +131,10 @@ TCHAR g_szInputBuffer[256];
 extern void procTest2(HWND hWnd);
 extern void procTest3(HWND hWnd);
 extern void procTest4(HWND hWnd);
+extern void procTest5(HWND hWnd);
+extern void procTest6(HWND hWnd);
+extern void procTest7(HWND hWnd);
+extern void procTest8(HWND hWnd);
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -165,6 +169,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				procTest4(hWnd);
 				break;
 				
+			case IDM_EXAM_5:
+				procTest5(hWnd);
+				break;
+
+			case IDM_EXAM_6:
+				procTest6(hWnd);
+				break;
+
+			case IDM_EXAM_7:
+				procTest7(hWnd);
+				break;
+
+			case IDM_EXAM_8:
+				procTest8(hWnd);
+				break;
+
             case IDM_ABOUT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
                 break;
