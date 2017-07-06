@@ -56,8 +56,8 @@ DWORD g_dwGdiLoopFsm = 0; //루프상태제어
 void StartGame()
 {
 	g_ptrCurrentMap = g_MapRoom1;
-	int g_nPlayerXpos = 3;
-	int g_nPlayerYpos = 3;
+	g_nPlayerXpos = 3;
+	g_nPlayerYpos = 3;
 	g_dwGdiLoopFsm = 10; //랜더링 활성화
 }
 
