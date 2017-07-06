@@ -134,7 +134,7 @@ void eventKeyDown(WPARAM wParam)
 	default:
 		break;
 	}
-	if (getMapTile(g_MapAttrBlock,g_nPlayerXpos, g_nPlayerYpos) == 1) {
+	if (getMapTile(g_MapAttrBlock,g_nPlayerXpos, g_nPlayerYpos) != 0) {
 		g_nPlayerXpos = savePosx;
 		g_nPlayerYpos = savePosy;
 	}
@@ -143,8 +143,6 @@ void eventKeyDown(WPARAM wParam)
 
 void drawTileIndex(Graphics *pGrp, Image *pImgBasicTile, int nPosX, int nPosY, int nTileIndex)
 {
-	//int nTileIndex = pMap[nPosX + nPosY*g_nTileXCount];
-
 	pGrp->DrawImage(pImgBasicTile,
 		Rect(nPosX * 16, nPosY * 16, g_nTileSize, g_nTileSize),
 		g_nTileSize * (nTileIndex % g_nTileXCount), //원본 x 위치
