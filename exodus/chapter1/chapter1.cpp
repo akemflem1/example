@@ -17,9 +17,9 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
-extern DWORD g_dwGdiLoopFsm;
 extern void GDIPLUS_Loop(MSG &);
 extern void eventKeyDown(WPARAM);
+extern void StartGame();
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
@@ -122,7 +122,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_KEYDOWN:
 	{
-		if (g_dwGdiLoopFsm == 0) break;
+		//if (g_dwGdiLoopFsm == 0) break;
 		eventKeyDown(wParam);
 	}
 		break;
@@ -133,10 +133,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		switch (wmId)
 		{
 		case IDM_GAME_START:
-			g_dwGdiLoopFsm = 10;
+		{
+			//g_dwGdiLoopFsm = 10;
+			StartGame();
+		}
 			break;
 		case IDM_GAME_END:
-			g_dwGdiLoopFsm = 0;
+			//g_dwGdiLoopFsm = 0;
 			break;
 		case IDM_ABOUT:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);

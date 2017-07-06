@@ -17,6 +17,17 @@ int g_MapRoom1[] = {
 	2, 2, 48, 2, 2, 2, 2, 2
 };
 
+int g_MapRoom2[] = {
+	3, 0,48, 0, 0, 0, 0, 3,
+	1,14,14,14,14,14,14, 1,
+	1,14,14,14,14,14,14, 1,
+	1,14,14,14,14,14,14, 1,
+	1,14,14,14,14,14,14, 1,
+	1,14,14,14,14,14,14, 1,
+	1,14,14,14,14,14,14, 1,
+	2, 2, 2, 2, 2, 2, 2, 2
+};
+
 int g_MapAttrBlock[] = {
 	1,1,1,1,1,1,1,1,
 	1,0,0,0,0,0,0,1,
@@ -28,8 +39,9 @@ int g_MapAttrBlock[] = {
 	1,1,1,1,1,1,1,1
 };
 
-int g_nPlayerXpos = 3;
-int g_nPlayerYpos = 3;
+int *g_ptrCurrentMap;
+int g_nPlayerXpos;
+int g_nPlayerYpos;
 
 //문열림 스위치 오브젝트
 int g_nItemSwitchXpos = 5;
@@ -39,6 +51,15 @@ int g_nItemSwitchStatus = 0; // 0: 스위치 미작동 1: 스위치 작동
 
 const int g_nTileSize = 16;
 const int g_nTileXCount = 8;
+
+DWORD g_dwGdiLoopFsm = 0; //루프상태제어
+void StartGame()
+{
+	g_ptrCurrentMap = g_MapRoom1;
+	int g_nPlayerXpos = 3;
+	int g_nPlayerYpos = 3;
+	g_dwGdiLoopFsm = 10; //랜더링 활성화
+}
 
 int getMapBlockAttr(int mx, int my)
 {
@@ -88,7 +109,6 @@ void drawTile(Graphics *pGrp, Image *pImgBasicTile, int nPosX, int nPosY, int *p
 	drawTileIndex(pGrp, pImgBasicTile, nPosX, nPosY, nTileIndex);
 }
 
-DWORD g_dwGdiLoopFsm = 0; //루프상태제어
 void GDIPLUS_Loop(MSG &msg)
 {
 	//----------------------------------------------------------------------
@@ -150,10 +170,14 @@ void GDIPLUS_Loop(MSG &msg)
 							if (g_nItemSwitchXpos == g_nPlayerXpos && g_nItemSwitchYpos == g_nPlayerYpos) {
 								g_nItemSwitchStatus = 1;
 								g_MapAttrBlock[8 * 7 + 2] = 0; // (7,2) 위치 막힘제거
-								g_MapRoom1[8 * 7 + 2] = 14;
+								g_MapRoom1[8 * 7 + 2] = 50; // 문 이미지 변경
 							}
 						}
-
+						if (g_ptrCurrentMap[g_nPlayerYpos * 8 + g_nPlayerXpos] == 50) {
+							g_ptrCurrentMap = g_MapRoom2;
+							g_nPlayerXpos = 3;
+							g_nPlayerYpos = 3;
+						}
 					}
 					//랜더링
 					HDC hdc = GetDC(msg.hwnd);
@@ -165,7 +189,7 @@ void GDIPLUS_Loop(MSG &msg)
 						for (int ix = 0; ix < 8; ix++) {
 							for (int iy = 0; iy < 8; iy++) {
 								drawTile(graphBackBuffer, &imgBasicTile,
-									ix, iy, g_MapRoom1);
+									ix, iy, g_ptrCurrentMap);
 							}
 						}
 
