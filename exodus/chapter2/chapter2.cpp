@@ -114,8 +114,10 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_DESTROY  - 종료 메시지를 게시하고 반환합니다.
 //
 //
+extern int g_nCurrentStage;
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	
     switch (message)
     {
 	case WM_KEYDOWN:
@@ -141,6 +143,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
         }
         break;
+	if (g_nCurrentStage > 4) {
+		MessageBox(hWnd, L"GAME END", L"END", MB_OK);
+	}
     case WM_PAINT:
         {
             PAINTSTRUCT ps;

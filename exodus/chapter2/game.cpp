@@ -115,10 +115,10 @@ int g_MapAttrBlock[][64] = {
 //캐릭터 리젠위치,열림스위치위치,탈출구 위치
 int g_StageInfo[][7] = {
 	{ 3,3,5,3,7,2,47 },
-	{ 1,1,5,3,3,7,47 },
-	{ 3,3,5,3,7,4,47 },
-	{ 3,3,5,3,0,3,47 },
-	{ 3,3,5,3,4,0,47 }
+	{ 1,2,5,5,3,7,47 },
+	{ 4,2,5,6,7,4,47 },
+	{ 5,3,1,6,0,3,47 },
+	{ 3,6,4,3,4,0,47 }
 };
 
 int g_nCurrentStage;
@@ -293,14 +293,14 @@ void GDIPLUS_Loop(MSG &msg)
 						{
 							setMapTile(g_MapAttrBlock, g_nExitPosX, g_nExitPosY, 1);
 							setMapTile(g_MapRooms, g_nExitPosX, g_nExitPosY, 48);
-							g_nExitStatus == 0; 
+							g_nExitStatus = 0; 
 						}
 							break;
 						case 2: //문열기
 						{
 							setMapTile(g_MapAttrBlock, g_nExitPosX, g_nExitPosY, 0);
 							setMapTile(g_MapRooms, g_nExitPosX, g_nExitPosY, 50);
-							g_nExitStatus == 0;
+							g_nExitStatus = 0;
 						}
 							break;
 						default:
