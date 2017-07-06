@@ -128,6 +128,10 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 //
 TCHAR g_szInputBuffer[256];
+extern void procTest2(HWND hWnd);
+extern void procTest3(HWND hWnd);
+extern void procTest4(HWND hWnd);
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
@@ -147,7 +151,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 				win32_Printf(hWnd, L"%d %s",nNum1 + nNum2 , g_szInputBuffer);
 			}
+			break;
+			
+			case IDM_EXAM_2:
+				procTest2(hWnd);
 				break;
+
+			case IDM_EXAM_3:
+				procTest3(hWnd);
+				break;
+
+			case IDM_EXAM_4:
+				procTest4(hWnd);
+				break;
+				
             case IDM_ABOUT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
                 break;
