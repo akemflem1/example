@@ -17,9 +17,12 @@ void StopGDILoop()
 	g_dwGdiLoopFsm = 20;
 }
 
-void Test_DrawPath(Graphics* graphBackBuffer, Pen *pen)
+void Test_DrawPath(void * pParam)
 {
+	Graphics* graphBackBuffer;
+	Pen *pen;
 	//패스 그리기
+
 	GraphicsPath pathObj;
 	pathObj.AddLine(0, 0, 50, 50);
 	pathObj.AddLine(50, 20, 150, 30);
@@ -33,14 +36,19 @@ void Test_DrawPath(Graphics* graphBackBuffer, Pen *pen)
 	graphBackBuffer->ResetTransform(); //안해주면 루프를 돌때마다 위치가 이동된다.
 }
 
-void Test_DrawRect(Graphics* graphBackBuffer, Pen *pen)
+void Test_DrawRect(void * pParam)
 {
+	Graphics* graphBackBuffer;
+	Pen *pen;
 	graphBackBuffer->DrawRectangle(pen, Rect(160, 100, 50, 50));
 }
 
-void Test_DrawRect(Graphics* graphBackBuffer, Pen *pen, Pen *pen2, Brush *brush)
+void Test_DrawCurve(void * pParam)
 {
-	
+	Graphics* graphBackBuffer;
+	Pen *pen, *pen2;
+	Brush *brush;
+
 	//곡선 그리기
 	Point points[] = { Point(50,50),Point(80,90),Point(120,90),Point(150,50) };
 
@@ -54,7 +62,6 @@ void Test_DrawRect(Graphics* graphBackBuffer, Pen *pen, Pen *pen2, Brush *brush)
 
 	graphBackBuffer->DrawBezier(pen2, points[0], points[1], points[2], points[3]);
 	
-	graphBackBuffer->DrawRectangle(pen, Rect(160, 100, 50, 50));
 }
 
 void GDIPLUS_Loop(MSG &msg)
@@ -86,8 +93,17 @@ void GDIPLUS_Loop(MSG &msg)
 		static LONG prev_tick;
 		static SYSTEMTIME time;
 
-		void(*Test_DrawFp)(Graphics*, Pen *);
+		void(*Test_DrawFp)(void *);
+		void *pThisParam;
 		Test_DrawFp = NULL;
+		pThisParam = NULL;
+
+		BYTE bufTest_DrawPath_Parm[256];
+
+
+
+		BYTE bufTest_DrawRect_Parm[256];
+		BYTE bufTest_DrawCurve_Parm[256];
 
 		while (!quit) {
 
@@ -102,15 +118,18 @@ void GDIPLUS_Loop(MSG &msg)
 						StartGDILoop();
 						break;
 					case IDM_TEST_PATH:
+						pThisParam = bufTest_DrawPath_Parm;
 						Test_DrawFp = Test_DrawPath;
 						break;
 					case IDM_TEST_RECT:
+						pThisParam = bufTest_DrawRect_Parm;
 						Test_DrawFp = Test_DrawRect;
 						break;
 					case IDM_TEST_NONE:
 						Test_DrawFp = NULL;
 						break;
 					case IDM_TEST_CURVE:
+						pThisParam = bufTest_DrawCurve_Parm;
 						//Test_DrawFp = NULL;
 						break;
 					default:
@@ -140,7 +159,7 @@ void GDIPLUS_Loop(MSG &msg)
 						Graphics graphics(hdc);
 						graphBackBuffer->FillRectangle(&brushBlack, rectScreen);
 						if (Test_DrawFp != NULL) {
-							Test_DrawFp(graphBackBuffer, &penWhite);
+							Test_DrawFp(pThisParam);
 						}
 						
 						graphics.DrawImage(&bmpMem, rectScreen);
