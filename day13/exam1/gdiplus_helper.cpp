@@ -17,10 +17,10 @@ void StopGDILoop()
 	g_dwGdiLoopFsm = 20;
 }
 
-void Test_DrawPath(void * pParam)
+void Test_DrawPath(Graphics* graphBackBuffer, void * pParam)
 {
-	Graphics* graphBackBuffer;
-	Pen *pen;
+	
+	Pen *pen = (Pen *)pParam;
 	//패스 그리기
 
 	GraphicsPath pathObj;
@@ -36,18 +36,19 @@ void Test_DrawPath(void * pParam)
 	graphBackBuffer->ResetTransform(); //안해주면 루프를 돌때마다 위치가 이동된다.
 }
 
-void Test_DrawRect(void * pParam)
+void Test_DrawRect(Graphics* graphBackBuffer,void * pParam)
 {
-	Graphics* graphBackBuffer;
-	Pen *pen;
+	
+	Pen *pen = (Pen *)pParam;
 	graphBackBuffer->DrawRectangle(pen, Rect(160, 100, 50, 50));
 }
 
-void Test_DrawCurve(void * pParam)
+void Test_DrawCurve(Graphics* graphBackBuffer, void * pParam)
 {
-	Graphics* graphBackBuffer;
-	Pen *pen, *pen2;
-	Brush *brush;
+	
+	Pen *pen = (Pen *)pParam;
+	Pen	*pen2 = (Pen *)((BYTE *)pParam + 4);
+	Brush *brush = (Brush *)((BYTE *)pParam + 8);
 
 	//곡선 그리기
 	Point points[] = { Point(50,50),Point(80,90),Point(120,90),Point(150,50) };
@@ -93,17 +94,25 @@ void GDIPLUS_Loop(MSG &msg)
 		static LONG prev_tick;
 		static SYSTEMTIME time;
 
-		void(*Test_DrawFp)(void *);
+		void(*Test_DrawFp)(Graphics* graphBackBuffer,void *);
 		void *pThisParam;
 		Test_DrawFp = NULL;
 		pThisParam = NULL;
 
+		void * pTemp;
 		BYTE bufTest_DrawPath_Parm[256];
-
-
+		pTemp = bufTest_DrawPath_Parm;
+		memcpy(pTemp, &penRed, 4);
 
 		BYTE bufTest_DrawRect_Parm[256];
+		pTemp = bufTest_DrawRect_Parm;
+		memcpy(pTemp, &penWhite, 4);
+
 		BYTE bufTest_DrawCurve_Parm[256];
+		pTemp = bufTest_DrawCurve_Parm;
+		memcpy(pTemp, &penYellow, 4);
+		memcpy((BYTE*)pTemp + 4, &penRed, 4);
+		memcpy((BYTE*)pTemp + 8, &brushGreen, 4);
 
 		while (!quit) {
 
@@ -130,7 +139,7 @@ void GDIPLUS_Loop(MSG &msg)
 						break;
 					case IDM_TEST_CURVE:
 						pThisParam = bufTest_DrawCurve_Parm;
-						//Test_DrawFp = NULL;
+						Test_DrawFp = Test_DrawCurve;
 						break;
 					default:
 						break;
@@ -159,7 +168,7 @@ void GDIPLUS_Loop(MSG &msg)
 						Graphics graphics(hdc);
 						graphBackBuffer->FillRectangle(&brushBlack, rectScreen);
 						if (Test_DrawFp != NULL) {
-							Test_DrawFp(pThisParam);
+							Test_DrawFp(graphBackBuffer ,pThisParam);
 						}
 						
 						graphics.DrawImage(&bmpMem, rectScreen);
