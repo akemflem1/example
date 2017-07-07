@@ -20,7 +20,7 @@ void StopGDILoop()
 void Test_DrawPath(Graphics* graphBackBuffer, void * pParam)
 {
 	
-	Pen *pen = (Pen *)pParam;
+	Pen *pen = *(Pen **)pParam;
 	//패스 그리기
 
 	GraphicsPath pathObj;
@@ -39,16 +39,18 @@ void Test_DrawPath(Graphics* graphBackBuffer, void * pParam)
 void Test_DrawRect(Graphics* graphBackBuffer,void * pParam)
 {
 	
-	Pen *pen = (Pen *)pParam;
+	Pen *pen = *(Pen **)pParam;
 	graphBackBuffer->DrawRectangle(pen, Rect(160, 100, 50, 50));
 }
 
 void Test_DrawCurve(Graphics* graphBackBuffer, void * pParam)
 {
-	
-	Pen *pen = (Pen *)pParam;
-	Pen	*pen2 = (Pen *)((BYTE *)pParam + 4);
-	Brush *brush = (Brush *)((BYTE *)pParam + 8);
+	Pen *pen, *pen2;
+	Brush *brush;
+
+	pen = *(Pen **)pParam;
+	pen2 = *(Pen **)((BYTE *)pParam + 4);
+	brush = *(Brush **)((BYTE *)pParam + 8);
 
 	//곡선 그리기
 	Point points[] = { Point(50,50),Point(80,90),Point(120,90),Point(150,50) };
@@ -102,18 +104,27 @@ void GDIPLUS_Loop(MSG &msg)
 		void * pTemp;
 		BYTE bufTest_DrawPath_Parm[256];
 		pTemp = bufTest_DrawPath_Parm;
-		memcpy(pTemp, &penRed, 4);
-
+		{
+			DWORD nTemp = (DWORD)&penRed;
+			memcpy(pTemp, &penRed, 4);
+		}
 		BYTE bufTest_DrawRect_Parm[256];
-		pTemp = bufTest_DrawRect_Parm;
-		memcpy(pTemp, &penWhite, 4);
-
+		//pTemp = bufTest_DrawRect_Parm;
+		{
+			DWORD nTemp = (DWORD)&penWhite;
+			memcpy(pTemp, &penWhite, 4);
+		}
 		BYTE bufTest_DrawCurve_Parm[256];
 		pTemp = bufTest_DrawCurve_Parm;
-		memcpy(pTemp, &penYellow, 4);
-		memcpy((BYTE*)pTemp + 4, &penRed, 4);
-		memcpy((BYTE*)pTemp + 8, &brushGreen, 4);
-
+		DWORD nTemp = (DWORD)&penYellow;
+		{
+			DWORD nTemp = (DWORD)&penYellow;
+			memcpy(pTemp, &penYellow, 4);
+			nTemp = (DWORD)&penWhite;
+			memcpy((BYTE*)pTemp + 4, &penRed, 4);
+			nTemp = (DWORD)&brushGreen;
+			memcpy((BYTE*)pTemp + 8, &brushGreen, 4);
+		}
 		while (!quit) {
 
 			if (PeekMessage(&msg, NULL, NULL, NULL, PM_REMOVE))
@@ -139,7 +150,7 @@ void GDIPLUS_Loop(MSG &msg)
 						break;
 					case IDM_TEST_CURVE:
 						pThisParam = bufTest_DrawCurve_Parm;
-						Test_DrawFp = Test_DrawCurve;
+						//Test_DrawFp = Test_DrawCurve;
 						break;
 					default:
 						break;
