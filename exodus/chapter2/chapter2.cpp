@@ -143,9 +143,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
         }
         break;
-	if (g_nCurrentStage > 4) {
-		MessageBox(hWnd, L"GAME END", L"END", MB_OK);
-	}
+
     case WM_PAINT:
         {
             PAINTSTRUCT ps;
