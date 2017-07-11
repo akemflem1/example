@@ -1,9 +1,9 @@
-// exam1.cpp : 응용 프로그램에 대한 진입점을 정의합니다.
+// exam2.cpp : 응용 프로그램에 대한 진입점을 정의합니다.
 //
 
 #include "stdafx.h"
-#include "exam1.h"
-#include "../../engine/utils.h"
+#include "exam2.h"
+#include "character.h"
 
 #define MAX_LOADSTRING 100
 
@@ -17,6 +17,8 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK procDlgNew(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+S_Character g_HeroPlayer;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -30,7 +32,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_EXAM1, szWindowClass, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDC_EXAM2, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
     // 응용 프로그램 초기화를 수행합니다.
@@ -39,7 +41,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_EXAM1));
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_EXAM2));
 
     MSG msg;
 
@@ -74,10 +76,10 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.cbClsExtra     = 0;
     wcex.cbWndExtra     = 0;
     wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_EXAM1));
+    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_EXAM2));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_EXAM1);
+    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_EXAM2);
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -132,97 +134,32 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             // 메뉴 선택을 구문 분석합니다.
             switch (wmId)
             {
-			case IDM_EXAM_1:
+			case IDM_NEW:
+				DialogBox(hInst, MAKEINTRESOURCE(IDD_NEW), hWnd, procDlgNew);
+				InvalidateRect(hWnd, NULL, TRUE);
+				break;
+			case IDM_SAVE:
 			{
 				FILE *fp;
-				fp = fopen("exam1.cpp", "r");
+				fp = fopen("save.bin", "wb");
 
-				for (int i = 0; i < 10; i++) {
-					char ch = fgetc(fp);
-					win32_Printf(hWnd, L"%c", ch);
-				}
+				fwrite(&g_HeroPlayer, sizeof(S_Character), 1, fp);
 
 				fclose(fp);
 			}
-			break;
-			case IDM_EXAM_2:
+				break;
+			case IDM_LOAD:
 			{
 				FILE *fp;
-				fp = fopen("exam1.cpp", "r");
-				TCHAR szBuf[1024];
-				for (int i = 0; i < 20; i++) {
-					fgetws(szBuf, 1024, fp);
-					OutputDebugString((TCHAR *)szBuf);
-					//win32_Printf(hWnd, L"%s", szBuf);
-				}
+				fp = fopen("save.bin", "rb");
+
+				fread(&g_HeroPlayer, sizeof(S_Character), 1, fp);
 
 				fclose(fp);
-
+				InvalidateRect(hWnd, NULL, TRUE);
 			}
-			break;
-
-			case IDM_EXAM_3:
-			{
-				FILE *fp;
-				fp = fopen("b.txt", "w");
-				fputc('A', fp);
-
-				fclose(fp);
-			}
-			break;
-
-			case IDM_EXAM_4:
-			{
-				FILE *fp;
-				fp = fopen("b.txt", "w");
-				fputs("hello file!", fp);
-
-				fclose(fp);
-			}
-			break;
-
-			case IDM_EXAM_5:
-			{
-				FILE *fp;
-				fp = fopen("b.txt", "a");
-				fputs("#append#", fp);
-
-				fclose(fp);
-			}
-			break;
-
-			case IDM_EXAM_6:
-			{
-				FILE *fp;
-				fp = fopen("b.txt", "r");
-				char szBuf[1024];
-				//SEEK_CUR 현재위치
-				//SEEK_END 파일 끝
-				fseek(fp, 10, SEEK_SET);//파일 시작
-				int nRead = fread(szBuf, 10, 1, fp);
-
-				int nPos = ftell(fp);
-				win32_Printf(hWnd, L"%d", nPos);
-				fclose(fp);
-			}
-			break;
-			
-			case IDM_EXAM_7:
-			{
-				FILE *fp;
-				fp = fopen("a.txt", "w");
-				char szBuf[1024];
-				fwrite("hello fwrite", 12, 1, fp);
-				fclose(fp);
-
-				/*fp = fopen("b.txt", "w");
-				fseek(fp, 12, SEEK_SET);
-				fwrite("*", 1, 1, fp);
-				fclose(fp);*/ //변경할때
-			}
-			break;
-
-            case IDM_ABOUT:
+				break;
+			case IDM_ABOUT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
                 break;
             case IDM_EXIT:
@@ -238,7 +175,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
             // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다.
-			DisplayLog(hdc);
+			
+			if (!wcscmp(g_HeroPlayer.m_szName, L"")) {
+				TCHAR *szMsg = L"캐릭터 정보가 없습니다.";
+				TextOut(hdc, 0, 0, szMsg,wcslen(szMsg));
+			}
+			else {
+				TCHAR szBuf[256];
+				swprintf_s(szBuf, 256, L"%s %d %d %d", g_HeroPlayer.m_szName, g_HeroPlayer.m_nHp, g_HeroPlayer.m_nAtk, g_HeroPlayer.m_nDep);
+				TextOut(hdc, 0, 0, szBuf, wcslen(szBuf));
+			}
             EndPaint(hWnd, &ps);
         }
         break;
@@ -269,4 +215,39 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     }
     return (INT_PTR)FALSE;
+}
+
+INT_PTR CALLBACK procDlgNew(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(lParam);
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		return (INT_PTR)TRUE;
+
+	case WM_COMMAND:
+		if (LOWORD(wParam) == IDOK)
+		{
+			TCHAR szBuf[256];
+			GetWindowText(GetDlgItem(hDlg, IDC_EDIT_NAME), szBuf, 256);
+			wcscpy_s(g_HeroPlayer.m_szName, 256, szBuf);
+
+			GetWindowText(GetDlgItem(hDlg, IDC_EDIT_HP), szBuf, 256);
+			g_HeroPlayer.m_nHp = _wtoi(szBuf);
+
+			GetWindowText(GetDlgItem(hDlg, IDC_EDIT_ATK), szBuf, 256);
+			g_HeroPlayer.m_nAtk = _wtoi(szBuf);
+
+			GetWindowText(GetDlgItem(hDlg, IDC_EDIT_DEP), szBuf, 256);
+			g_HeroPlayer.m_nDep = _wtoi(szBuf);
+
+			EndDialog(hDlg, LOWORD(wParam));
+			return (INT_PTR)TRUE;
+		}
+		else if (LOWORD(wParam) == IDCANCEL) {
+			return (INT_PTR)FALSE;
+		}
+		break;
+	}
+	return (INT_PTR)FALSE;
 }
