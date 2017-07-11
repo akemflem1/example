@@ -25,6 +25,7 @@ INT_PTR CALLBACK procMemoDel(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 
 TCHAR *g_pszMemoList[1024];
 int g_nMemoCount;
+
 /*
 TCHAR g_szMemoDB[1024];
 int g_nMemoDBTailIndex = 0;
@@ -143,20 +144,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		g_nMemoCount = 0;
 	}
-		break;
+	break;
 	case WM_COMMAND:
 	{
 		int wmId = LOWORD(wParam);
 		// 메뉴 선택을 구문 분석합니다.
 		switch (wmId)
 		{
-		case IDM_MEMO_INS: {
-			DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG_INS), hWnd, procMemoIns);	
-		}
+		case IDM_MEMO_INS:
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG_INS), hWnd, procMemoIns);
 			break;
-		case IDM_DEL_INDEX: {
+		case IDM_DEL_INDEX:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG_DEL), hWnd, procMemoDel);
-		}
 			break;
 		case IDM_DEL_FRONT:
 		{
@@ -173,28 +172,27 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 		case IDM_DEL_BACK:
-		{
 			if (g_nMemoCount > 0) {
 				g_nMemoCount--;
 
 				free(g_pszMemoList[g_nMemoCount]);
 				g_pszMemoList[g_nMemoCount] = NULL;
+
 			}
-		}
 			break;
 
-		case IDM_MEMO_VIEW: {
+		case IDM_MEMO_VIEW:
 			//DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG_VIEW), hWnd, procMemoView);
-
+		{
 			for (int i = 0; i < g_nMemoCount; i++) {
 				win32_Printf(hWnd, L"%s", g_pszMemoList[i]);
 			}
+
 		}
-			break;
+		break;
 		case IDM_LOG_CLEAR:
 			ClearLog(hWnd);
 			break;
-
 		case IDM_ABOUT:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
 			break;
@@ -210,13 +208,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hWnd, &ps);
+		DisplayLog(hdc);
 		// TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다.
 		EndPaint(hWnd, &ps);
 	}
 	break;
 	case WM_DESTROY:
-		PostQuitMessage(0);
-		break;
+
+	{
+		for (int i = 0; i < g_nMemoCount; i++) {
+			free(g_pszMemoList[i]);
+		}
+	}
+
+	PostQuitMessage(0);
+	break;
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
@@ -224,6 +230,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 // 정보 대화 상자의 메시지 처리기입니다.
+INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(lParam);
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		return (INT_PTR)TRUE;
+
+	case WM_COMMAND:
+		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
+		{
+			EndDialog(hDlg, LOWORD(wParam));
+			return (INT_PTR)TRUE;
+		}
+		break;
+	}
+	return (INT_PTR)FALSE;
+}
+
+// 메모입력 대화 상자의 메시지 처리기입니다.
 INT_PTR CALLBACK procMemoIns(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);

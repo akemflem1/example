@@ -27,6 +27,12 @@ void win32_Scanf(const TCHAR *szBuf, const TCHAR *fmt, ...)
 	va_end(ap);
 }
 
+void ClearLog(HWND hWnd)
+{
+	g_nMsgLogTailIndex = 0;
+	InvalidateRect(hWnd, NULL, TRUE);
+}
+
 void DisplayLog(HDC hdc)
 {
 
