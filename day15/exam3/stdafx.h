@@ -17,6 +17,8 @@
 #include <memory.h>
 #include <tchar.h>
 
+#include "../../engine/irrlicht/include/irrlicht.h"
+
 #include <objidl.h>
 #include <gdiplus.h>
 using namespace Gdiplus;

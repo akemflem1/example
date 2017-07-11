@@ -15,7 +15,7 @@ WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 // 이 코드 모듈에 들어 있는 함수의 정방향 선언입니다.
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
-LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
+
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK procDlgNew(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 S_Character g_HeroPlayer;
@@ -113,7 +113,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    return TRUE;
 }
-
 //
 //  함수: WndProc(HWND, UINT, WPARAM, LPARAM)
 //
@@ -124,79 +123,79 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_DESTROY  - 종료 메시지를 게시하고 반환합니다.
 //
 //
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    switch (message)
-    {
-    case WM_COMMAND:
-        {
-            int wmId = LOWORD(wParam);
-            // 메뉴 선택을 구문 분석합니다.
-            switch (wmId)
-            {
-			case IDM_NEW:
-				DialogBox(hInst, MAKEINTRESOURCE(IDD_NEW), hWnd, procDlgNew);
-				InvalidateRect(hWnd, NULL, TRUE);
-				break;
-			case IDM_SAVE:
-			{
-				FILE *fp;
-				fp = fopen("save.bin", "wb");
+	switch (message)
+	{
+	case WM_COMMAND:
+	{
+		int wmId = LOWORD(wParam);
+		// 메뉴 선택을 구문 분석합니다.
+		switch (wmId)
+		{
+		case IDM_NEW:
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_NEW), hWnd, procDlgNew);
+			InvalidateRect(hWnd, NULL, TRUE);
+			break;
+		case IDM_SAVE:
+		{
+			FILE *fp;
+			fp = fopen("save.bin", "wb");
 
-				fwrite(&g_HeroPlayer, sizeof(S_Character), 1, fp);
+			fwrite(&g_HeroPlayer, sizeof(S_Character), 1, fp);
 
-				fclose(fp);
-			}
-				break;
-			case IDM_LOAD:
-			{
-				FILE *fp;
-				fp = fopen("save.bin", "rb");
+			fclose(fp);
+		}
+		break;
+		case IDM_LOAD:
+		{
+			FILE *fp;
+			fp = fopen("save.bin", "rb");
 
-				fread(&g_HeroPlayer, sizeof(S_Character), 1, fp);
+			fread(&g_HeroPlayer, sizeof(S_Character), 1, fp);
 
-				fclose(fp);
-				InvalidateRect(hWnd, NULL, TRUE);
-			}
-				break;
-			case IDM_ABOUT:
-                DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-                break;
-            case IDM_EXIT:
-                DestroyWindow(hWnd);
-                break;
-            default:
-                return DefWindowProc(hWnd, message, wParam, lParam);
-            }
-        }
-        break;
-    case WM_PAINT:
-        {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다.
-			
-			if (!wcscmp(g_HeroPlayer.m_szName, L"")) {
-				TCHAR *szMsg = L"캐릭터 정보가 없습니다.";
-				TextOut(hdc, 0, 0, szMsg,wcslen(szMsg));
-			}
-			else {
-				TCHAR szBuf[256];
-				swprintf_s(szBuf, 256, L"%s %d %d %d", g_HeroPlayer.m_szName, g_HeroPlayer.m_nHp, g_HeroPlayer.m_nAtk, g_HeroPlayer.m_nDep);
-				TextOut(hdc, 0, 0, szBuf, wcslen(szBuf));
-			}
-            EndPaint(hWnd, &ps);
-        }
-        break;
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        break;
-    default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
-    }
-    return 0;
+			fclose(fp);
+			InvalidateRect(hWnd, NULL, TRUE);
+		}
+		break;
+		case IDM_ABOUT:
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+			break;
+		case IDM_EXIT:
+			DestroyWindow(hWnd);
+			break;
+		default:
+			return DefWindowProc(hWnd, message, wParam, lParam);
+		}
+	}
+	break;
+	case WM_PAINT:
+	{
+		PAINTSTRUCT ps;
+		HDC hdc = BeginPaint(hWnd, &ps);
+		// TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다.
+
+		if (!wcscmp(g_HeroPlayer.m_szName, L"")) {
+			TCHAR *szMsg = L"캐릭터 정보가 없습니다.";
+			TextOut(hdc, 0, 0, szMsg, wcslen(szMsg));
+		}
+		else {
+			TCHAR szBuf[256];
+			swprintf_s(szBuf, 256, L"%s %d %d %d", g_HeroPlayer.m_szName, g_HeroPlayer.m_nHp, g_HeroPlayer.m_nAtk, g_HeroPlayer.m_nDep);
+			TextOut(hdc, 0, 0, szBuf, wcslen(szBuf));
+		}
+		EndPaint(hWnd, &ps);
+	}
+	break;
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		break;
+	default:
+		return DefWindowProc(hWnd, message, wParam, lParam);
+	}
+	return 0;
 }
-
 // 정보 대화 상자의 메시지 처리기입니다.
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {

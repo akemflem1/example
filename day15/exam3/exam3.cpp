@@ -17,6 +17,8 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK procTileSelDlg(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK procTileScriptDlg(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -137,13 +139,20 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 //
 S_GAMEMAP g_GameMap;
+int g_nCurrentTileIndex;
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
 	case WM_CREATE:
 	{
+		g_nCurrentTileIndex = 1;
 		InitMap(&g_GameMap, 8, 8, L"../../res/loveable_rogue.png", 16, 16);
+		SetTilePosition(&g_GameMap, 0, 177, 0);
+		SetTilePosition(&g_GameMap, 16, 177, 1);
+		SetTilePosition(&g_GameMap, 16 * 2, 177, 2);
+		SetTilePosition(&g_GameMap, 16 * 3, 177, 3);
 	}
 		break;
     case WM_COMMAND:
@@ -152,6 +161,36 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             // 메뉴 선택을 구문 분석합니다.
             switch (wmId)
             {
+			case IDM_SCRIPT:
+			{
+				DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG_SCRIPT), hWnd, procTileScriptDlg);
+				InvalidateRect(hWnd, NULL, TRUE);
+			}
+			break;
+			case IDM_TILE_SEL:
+				DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG_SELECT_TILE), hWnd, procTileSelDlg);
+				break;
+			case IDM_SAVE:
+			{
+				FILE *fp;
+				fp = fopen("save.bin", "wb");
+
+				fwrite(&g_GameMap, 264, 1, fp);
+
+				fclose(fp);
+			}
+			break;
+			case IDM_LOAD:
+			{
+				FILE *fp;
+				fp = fopen("save.bin", "rb");
+
+				fread(&g_GameMap, 264, 1, fp);
+
+				fclose(fp);
+				InvalidateRect(hWnd, NULL, TRUE);
+			}
+			break;
             case IDM_ABOUT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
                 break;
@@ -171,7 +210,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		swprintf(szBuf,L"%d, %d \n", mx / g_GameMap.m_TileWidth, my / g_GameMap.m_TileHeight);
 		OutputDebugString(szBuf);
 
-		SetMapIndex(&g_GameMap, mx / g_GameMap.m_TileWidth, my / g_GameMap.m_TileHeight,1);
+		if (mx < 128 && my < 128) {
+			SetMapIndex(&g_GameMap,	mx / g_GameMap.m_TileWidth, my / g_GameMap.m_TileHeight, g_nCurrentTileIndex);
+		}
+		else if (my < 16 && mx > 144) {
+			swprintf(szBuf, L"%d \n", mx / g_GameMap.m_TileWidth);
+			OutputDebugString(szBuf);
+			g_nCurrentTileIndex = (mx / g_GameMap.m_TileWidth) - 8;
+		}
 		InvalidateRect(hWnd, NULL, TRUE);
 	}
 		break;
@@ -183,7 +229,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			Graphics grp(hdc);
 			//DrawTile(&g_GameMap, &grp, 0, 0, 1);
 			DrawMap(&g_GameMap, &grp, 0, 0);
+			Pen penBlack(Color(255, 0, 0, 0));
+			grp.DrawRectangle(&penBlack, Rect(0, 0, 128, 128));
 
+			DrawTilePalette(&g_GameMap, &grp, 9, 0);
+
+			//현제 선택된 타일 표시 
+			grp.TranslateTransform(160, 32);
+			grp.ScaleTransform(4, 4);
+			DrawTile(&g_GameMap, &grp, 0, 0, g_nCurrentTileIndex - 1);
+
+			grp.ResetTransform();
             EndPaint(hWnd, &ps);
         }
         break;
@@ -214,4 +270,92 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     }
     return (INT_PTR)FALSE;
+}
+
+INT_PTR CALLBACK procTileSelDlg(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(lParam);
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		return (INT_PTR)TRUE;
+
+	case WM_COMMAND:
+		if (LOWORD(wParam) == IDOK)
+		{
+			TCHAR szBuf[64];
+			GetWindowText(GetDlgItem(hDlg, IDC_EDIT_SELTILE), szBuf, 64);
+
+			g_nCurrentTileIndex = _wtoi(szBuf);
+
+			EndDialog(hDlg, LOWORD(wParam));
+			return (INT_PTR)TRUE;
+		}
+		else if (LOWORD(wParam) == IDCANCEL) {
+			EndDialog(hDlg, LOWORD(wParam));
+			return (INT_PTR)FALSE;
+		}
+		break;
+	}
+	return (INT_PTR)FALSE;
+}
+
+// 정보 대화 상자의 메시지 처리기입니다.
+INT_PTR CALLBACK procTileScriptDlg(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(lParam);
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		return (INT_PTR)TRUE;
+
+	case WM_COMMAND:
+		if (LOWORD(wParam) == IDOK)
+		{
+			TCHAR szBuf[64];
+			GetWindowText(GetDlgItem(hDlg, IDC_EDIT_SCRIPT), szBuf, 64);
+
+			TCHAR *token;
+			token = wcstok(szBuf, L", ");
+
+			//SetMapIndex
+			if (!wcscmp(L"smi", token)) {
+				int x, y, idx;
+				token = wcstok(NULL, L", ");
+				x = _wtoi(token);
+				token = wcstok(NULL, L", ");
+				y = _wtoi(token);
+				token = wcstok(NULL, L", ");
+				idx = _wtoi(token);
+				SetMapIndex(&g_GameMap, x, y, idx);
+
+			}
+			else if (!wcscmp(L"stp", token)) {
+				int x, y, idx;
+				token = wcstok(NULL, L", ");
+				x = _wtoi(token);
+				token = wcstok(NULL, L", ");
+				y = _wtoi(token);
+				token = wcstok(NULL, L", ");
+				idx = _wtoi(token);
+				SetTilePosition(&g_GameMap, x, y, idx);
+			}
+			else if (!wcscmp(L"dtl", token)) {
+				//DrawTile(&g_GameMap,pGrp, int x, int y, int nTileIndex)
+			}
+			else {
+				MessageBox(hDlg, L"존재하지않는 스크립트입니다.", L"", MB_OK);
+			}
+
+
+			EndDialog(hDlg, LOWORD(wParam));
+			return (INT_PTR)TRUE;
+		}
+		else if (LOWORD(wParam) == IDCANCEL) {
+			EndDialog(hDlg, LOWORD(wParam));
+			return (INT_PTR)FALSE;
+		}
+		break;
+	}
+	return (INT_PTR)FALSE;
 }

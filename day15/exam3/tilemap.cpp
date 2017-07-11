@@ -18,6 +18,12 @@ void InitMap(S_GAMEMAP *pMap, int width, int height, TCHAR *szImgFile,int nTileW
 	pMap->m_ImageObj = new Image(szImgFile);
 }
 
+void SetTilePosition(S_GAMEMAP *pMap, int x, int y, int index)
+{
+	pMap->m_TilePositions[index] = irr::core::vector2di(x, y);
+}
+
+
 void SetMapIndex(S_GAMEMAP *pMap, int x, int y, int index)
 {
 	pMap->m_Map[pMap->m_nWidth*y + x] = index;
@@ -45,5 +51,12 @@ void DrawMap(S_GAMEMAP *pMap, Graphics *pGrp, int xOrg, int yOrg)
 
 			}
 		}
+	}
+}
+
+void DrawTilePalette(S_GAMEMAP *pMap, Graphics *pGrp, int xOrg, int yOrg)
+{
+	for (int i = 0; i < 8; i++) {
+		DrawTile(pMap, pGrp, xOrg + i, yOrg, i);
 	}
 }
