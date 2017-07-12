@@ -206,7 +206,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					grp.RotateTransform(g_fTopAngle);
 					grp.DrawRectangle(&pen, -5, -15, 10, 20);
 					grp.DrawRectangle(&pen, -10, -10, 20, 20);
-					grp.ResetTransform();
+					grp.SetTransform(&oldMat);
 				}
 				grp.SetTransform(&oldMat);
 			}
