@@ -165,7 +165,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			//grp.GetTransform(&tempMat);
 			tempMat.GetElements(matEm);
 			grp.DrawLine(&pen, 0, 0, 50, 50);
-			grp.ResetTransform();
+			tempMat.SetElements(1, 0, 0, 1, 0, 0);
+			grp.SetTransform(&tempMat);
+			//grp.ResetTransform();
 			EndPaint(hWnd, &ps);
         }
         break;
