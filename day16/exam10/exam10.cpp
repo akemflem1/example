@@ -1,8 +1,8 @@
-// exam8.cpp : 응용 프로그램에 대한 진입점을 정의합니다.
+// exam10.cpp : 응용 프로그램에 대한 진입점을 정의합니다.
 //
 
 #include "stdafx.h"
-#include "exam8.h"
+#include "exam10.h"
 
 #define MAX_LOADSTRING 100
 
@@ -29,7 +29,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	plusEngine::startUpGdiPlus();
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_EXAM8, szWindowClass, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDC_EXAM10, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
     // 응용 프로그램 초기화를 수행합니다.
@@ -38,7 +38,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_EXAM8));
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_EXAM10));
 
     MSG msg;
 
@@ -73,10 +73,10 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.cbClsExtra     = 0;
     wcex.cbWndExtra     = 0;
     wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_EXAM8));
+    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_EXAM10));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_EXAM8);
+    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_EXAM10);
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -121,46 +121,27 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_DESTROY  - 종료 메시지를 게시하고 반환합니다.
 //
 //
-//Image *g_pImgMissile;
-REAL g_fAngle;
-REAL g_fTopAngle = 0.0;
-irr::core::vector2df g_vPosition;
 
+irr::core::vector2df g_vTestPt(100,-100);
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
-	case WM_CREATE:
-	{
-		g_fAngle = 0.0;
-		g_vPosition.set(0, 0);
-		//g_pImgMissile = new Image(L"../../res/spr_missile.png");
-	}
-		break;
 	case WM_KEYDOWN:
 	{
-		irr::core::vector2df vDir(0, 1); //방향벡터
-		vDir.rotateBy(g_fAngle);
-
 		switch (wParam)
 		{
 		case VK_UP:
-			g_vPosition -= vDir * 10;
+			g_vTestPt += irr::core::vector2df(0, -1) * 10;
 			break;
 		case VK_DOWN:
-			g_vPosition += vDir * 10;
+			g_vTestPt += irr::core::vector2df(0, 1) * 10;
 			break;
 		case VK_LEFT:
-			g_fAngle -= 10.;
+			g_vTestPt += irr::core::vector2df(-1,0) * 10;
 			break;
 		case VK_RIGHT:
-			g_fAngle += 10.;
-			break;
-		case 'A':
-			g_fTopAngle -= 10.;
-			break;
-		case 'D':
-			g_fTopAngle += 10.;
+			g_vTestPt += irr::core::vector2df(1, 0) * 10;
 			break;
 		default:
 			break;
@@ -190,30 +171,30 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
             // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다.
-			Graphics grp(hdc);
+			irr::core::line2df line1(irr::core::vector2df(-150,-50), irr::core::vector2df(150, -100));
+			irr::core::line2df line2(irr::core::vector2df(0, 0), g_vTestPt);
 
+			Graphics grp(hdc);
 			Pen pen(Color(0, 0, 0));
 			grp.DrawLine(&pen, 0, 120, 320, 120);
 			grp.DrawLine(&pen, 160, 0, 160, 240);
 			grp.DrawRectangle(&pen, 0, 0, 320, 240);
 
 			grp.SetTransform(&Matrix(1, 0, 0, 1, 160, 120));
-			{
-				Matrix oldMat;
-				grp.GetTransform(&oldMat);
-				grp.TranslateTransform(g_vPosition.X, g_vPosition.Y);
-				grp.RotateTransform(g_fAngle);
-				grp.DrawRectangle(&pen, -20, -30, 40, 60);
-				{
-					grp.RotateTransform(g_fTopAngle);
-					grp.DrawRectangle(&pen, -5, -15, 10, 20);
-					grp.DrawRectangle(&pen, -10, -10, 20, 20);
-					//grp.DrawImage(g_pImgMissile, -32, -16, 64, 32);
-					grp.SetTransform(&oldMat);
-				}
-				grp.SetTransform(&oldMat);
+
+			plusEngine::printf(&grp, line1.start.X, line1.start.Y, L"%.1f %.1f", line1.start.X, line1.start.Y);
+			plusEngine::printf(&grp, line1.end.X, line1.end.Y, L"%.1f %.1f", line1.end.X, line1.end.Y);
+			grp.DrawLine(&pen, line1.start.X, line1.start.Y, line1.end.X, line1.end.Y);
+			grp.DrawLine(&pen, line2.start.X, line2.start.Y, line2.end.X, line2.end.Y);
+
+			irr::core::vector2df colPt;
+			if (line1.intersectWith(line2, colPt)) {
+				plusEngine::printf(&grp, colPt.X, colPt.Y, L"%.1f %.1f", colPt.X, colPt.Y);
+				grp.DrawRectangle(&pen, colPt.X - 4, colPt.Y - 4, 8., 8.);
 			}
+			
 			grp.ResetTransform();
+
 
             EndPaint(hWnd, &ps);
         }
