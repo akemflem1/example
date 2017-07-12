@@ -1,8 +1,8 @@
-// exam6.cpp : 응용 프로그램에 대한 진입점을 정의합니다.
+// exam8.cpp : 응용 프로그램에 대한 진입점을 정의합니다.
 //
 
 #include "stdafx.h"
-#include "exam6.h"
+#include "exam8.h"
 
 #define MAX_LOADSTRING 100
 
@@ -29,7 +29,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	plusEngine::startUpGdiPlus();
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_EXAM6, szWindowClass, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDC_EXAM8, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
     // 응용 프로그램 초기화를 수행합니다.
@@ -38,7 +38,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_EXAM6));
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_EXAM8));
 
     MSG msg;
 
@@ -73,10 +73,10 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.cbClsExtra     = 0;
     wcex.cbWndExtra     = 0;
     wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_EXAM6));
+    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_EXAM8));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_EXAM6);
+    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_EXAM8);
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -121,23 +121,46 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_DESTROY  - 종료 메시지를 게시하고 반환합니다.
 //
 //
-REAL g_fAngle = 0.0;
+REAL g_fAngle;
+REAL g_fTopAngle = 0.0;
+irr::core::vector2df g_vPosition;
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+	case WM_CREATE:
+	{
+		g_fAngle = 0.0;
+		g_vPosition.set(0, 0);
+	}
+		break;
 	case WM_KEYDOWN:
 	{
+		irr::core::vector2df vDir(0, 1); //방향벡터
+		vDir.rotateBy(g_fAngle);
+
 		switch (wParam)
 		{
+		case VK_UP:
+			g_vPosition -= vDir * 10;
+			break;
+		case VK_DOWN:
+			g_vPosition += vDir * 10;
+			break;
 		case VK_LEFT:
-			g_fAngle -= 10.0;
+			g_fAngle -= 10.;
 			break;
 		case VK_RIGHT:
-			g_fAngle += 10.0;
+			g_fAngle += 10.;
+			break;
+		case 'A':
+			g_fTopAngle -= 10.;
+			break;
+		case 'D':
+			g_fTopAngle += 10.;
 			break;
 		default:
-		
 			break;
 		}
 		InvalidateRect(hWnd, NULL, TRUE);
@@ -172,19 +195,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			grp.DrawLine(&pen, 160, 0, 160, 240);
 			grp.DrawRectangle(&pen, 0, 0, 320, 240);
 
-			grp.TranslateTransform(160, 120);
-			//grp.DrawRectangle(&pen, -50, -25,100, 50);
-
 			grp.SetTransform(&Matrix(1, 0, 0, 1, 160, 120));
 			{
 				Matrix oldMat;
 				grp.GetTransform(&oldMat);
+				grp.TranslateTransform(g_vPosition.X, g_vPosition.Y);
 				grp.RotateTransform(g_fAngle);
-				grp.DrawRectangle(&pen, -50, -25, 100, 50);
+				grp.DrawRectangle(&pen, -20, -30, 40, 60);
+				{
+					grp.RotateTransform(g_fTopAngle);
+					grp.DrawRectangle(&pen, -5, -15, 10, 20);
+					grp.DrawRectangle(&pen, -10, -10, 20, 20);
+					grp.ResetTransform();
+				}
 				grp.SetTransform(&oldMat);
 			}
-			
 			grp.ResetTransform();
+
             EndPaint(hWnd, &ps);
         }
         break;
