@@ -124,6 +124,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 Image *g_pImgMissile;
 irr::core::vector2df g_vTarget;
 irr::core::vector2df g_vMissilePos;
+int Fire = 0;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -162,6 +163,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case VK_DOWN:
 			g_vTarget += irr::core::vector2df(0, 1) * 10;
 				break;
+		case 'X':
+			Fire = 1;
+			break;
+		case 'Z':
+			Fire = 0;
+			break;
 		default:
 			break;
 		}
@@ -187,6 +194,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			grp.DrawLine(&pen, 160, 0, 160, 240);
 			grp.DrawRectangle(&pen, 0, 0, 320, 240);
 			grp.SetTransform(&Matrix(1, 0, 0, 1, 160, 120));
+			grp.DrawRectangle(&pen, g_vTarget.X - 16, g_vTarget.Y - 16, 32., 32.);
+			int i;
 			{
 				Matrix oldMat;
 				grp.GetTransform(&oldMat);
@@ -194,11 +203,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				vDir.normalize();//항상 길이가 1이되게 하는 단위벡터
 				irr::f64 fAngle = vDir.getAngle();
 				grp.RotateTransform(-fAngle);
-				grp.DrawImage(g_pImgMissile, -32, -16, 64, 32);
+				if (Fire == 0){
+					grp.DrawImage(g_pImgMissile, -32, -16, 64, 32);
+				}
+				i = fAngle;
 				grp.SetTransform(&oldMat);
 			}
+			{
+				if (Fire == 1) {
+					grp.TranslateTransform(g_vTarget.X, g_vTarget.Y);
+					grp.RotateTransform(-i);
+					grp.DrawImage(g_pImgMissile, -55, -16, 64, 32);
+				}
+			}
 			
-			grp.DrawRectangle(&pen, g_vTarget.X-16, g_vTarget.Y-16, 32., 32.);
+
 			grp.ResetTransform();
             EndPaint(hWnd, &ps);
         }
