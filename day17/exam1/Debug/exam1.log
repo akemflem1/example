@@ -1,0 +1,6 @@
+﻿  exam1.cpp
+c:\users\kict-02\desktop\unity\example\day17\exam1\exam1.cpp(185): warning C4244: '인수': 'irr::f32'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kict-02\desktop\unity\example\day17\exam1\exam1.cpp(192): warning C4244: '인수': 'irr::f32'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kict-02\desktop\unity\example\day17\exam1\exam1.cpp(195): warning C4244: '인수': 'irr::f32'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  exam1.vcxproj -> C:\Users\KICT-02\Desktop\unity\example\day17\Debug\exam1.exe
+  exam1.vcxproj -> C:\Users\KICT-02\Desktop\unity\example\day17\Debug\exam1.pdb (Partial PDB)
