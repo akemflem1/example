@@ -1,8 +1,8 @@
-// exam4.cpp : 응용 프로그램에 대한 진입점을 정의합니다.
+// exam5.cpp : 응용 프로그램에 대한 진입점을 정의합니다.
 //
 
 #include "stdafx.h"
-#include "exam4.h"
+#include "exam5.h"
 
 #define MAX_LOADSTRING 100
 
@@ -26,10 +26,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     // TODO: 여기에 코드를 입력합니다.
-
+	plusEngine::startUpGdiPlus();
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_EXAM4, szWindowClass, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDC_EXAM5, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
     // 응용 프로그램 초기화를 수행합니다.
@@ -38,66 +38,23 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_EXAM4));
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_EXAM5));
 
     MSG msg;
 
     // 기본 메시지 루프입니다.
-	plusEngine::GDIPLUS_Loop(msg, Rect(0, 0, 320, 240));
-
+    while (GetMessage(&msg, nullptr, 0, 0))
+    {
+        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+    }
+	plusEngine::CloseGdiPlus();
     return (int) msg.wParam;
 }
 
-GameObject g_ObjMissile;
-GameObject *g_ObjMissiles[1024];
-int g_nMissileCount;
-Image *g_pImgMissile;
-
-void OnCreate(HWND hWnd)
-{
-	g_ObjMissile.m_fRotation = 0.0;
-	g_ObjMissile.m_fSpeed = 0.0;
-	g_ObjMissile.m_position = irr::core::vector2df(0, 0);
-	g_pImgMissile = g_ObjMissile.m_pImg = new Image(L"../../res/spr_missile.png");
-
-	for (int i = 0; i < 1024; i++) {
-		g_ObjMissiles[i] = NULL;
-	}
-	g_nMissileCount = 0;
-}
-
-void OnApply(double fDelta)
-{
-	GameObject_Apply(&g_ObjMissile, fDelta);
-	for (int i = 0; i < 1024; i++) {
-		if (g_ObjMissiles[i]) {
-			GameObject_Apply(g_ObjMissiles[i],fDelta);
-			if (g_ObjMissiles[i]->m_nFSM == 20) {
-				delete g_ObjMissiles[i];
-				g_ObjMissiles[i] = NULL;
-			}
-		}
-	}
-}
-
-void OnRender(double fDelta,Graphics *grp)
-{
-	grp->Clear(Color(200, 191, 231));
-	Pen pen(Color(0, 0, 0));
-	grp->DrawLine(&pen, 0, 120, 320, 120);
-	grp->DrawLine(&pen, 160, 0, 160, 240);
-	grp->DrawRectangle(&pen, 0, 0, 320, 240);
-	grp->SetTransform(&Matrix(1, 0, 0, 1, 160, 120));
-	GameObject_Draw(&g_ObjMissile, *grp);
-
-	for (int i = 0; i < 1024; i++) {
-		if (g_ObjMissiles[i]) {
-			GameObject_Draw(g_ObjMissiles[i], *grp);
-		}
-	}
-
-	grp->ResetTransform();
-}
 
 
 //
@@ -116,10 +73,10 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.cbClsExtra     = 0;
     wcex.cbWndExtra     = 0;
     wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_EXAM4));
+    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_EXAM5));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_EXAM4);
+    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_EXAM5);
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -154,6 +111,40 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    return TRUE;
 }
 
+HWND g_hWnd;
+
+DWORD WINAPI myThreadFunc(LPVOID pParam)
+{
+	HDC hdc = GetDC(g_hWnd);
+	Graphics grp(hdc);
+	int i = 0;
+	while(1) {
+		//SolidBrush brush(Color(255, 0, 0));		
+		plusEngine::printf(&grp, rand() % 501, rand() % 500, L"%d", i++);
+		Sleep(250);
+	}
+
+	ReleaseDC(g_hWnd, hdc);
+	
+	return 0;
+}
+
+DWORD WINAPI myThreadFunc2(LPVOID pParam)
+{
+	HDC hdc = GetDC(g_hWnd);
+	Graphics grp(hdc);
+	SolidBrush brush(Color(255, 0, 0));
+
+	while(1){
+		grp.FillRectangle(&brush, rand() % 500, rand() % 500, 32, 32);
+		Sleep(5);
+	}
+
+	ReleaseDC(g_hWnd, hdc);
+
+	return 0;
+}
+
 //
 //  함수: WndProc(HWND, UINT, WPARAM, LPARAM)
 //
@@ -164,42 +155,19 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_DESTROY  - 종료 메시지를 게시하고 반환합니다.
 //
 //
+DWORD g_ThreadID;
+HANDLE g_hThreadHandle;
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
-    {case WM_LBUTTONDOWN:
+    {
+	case WM_CREATE:
 	{
-		int mx = LOWORD(lParam);
-		int my = HIWORD(lParam);
-		g_ObjMissile.m_position.set(mx-160, my-120);
-		for (int i = 0; i < 1024; i++) {
-			if (g_ObjMissiles[i] == NULL) {
-				GameObject * pObj = (GameObject *)malloc(sizeof(GameObject));
-				pObj->m_nFSM = 0;
-				pObj->m_pImg = g_pImgMissile;
-				pObj->m_fRotation = 0.0;
-				pObj->m_fSpeed = 10.0;
-				pObj->m_fFuel = 5.0;
-				pObj->m_position = irr::core::vector2df(mx - 160, my - 120);
-				g_ObjMissiles[i] = pObj;
-				break;
-			}
-		}
+		g_hWnd = hWnd;
+		CreateThread(NULL, 0, myThreadFunc, NULL, 0, &g_ThreadID);
+		CreateThread(NULL, 0, myThreadFunc2, NULL, 0, &g_ThreadID);
 	}
-		break;
-	case WM_KEYDOWN:
-		switch (wParam)
-		{
-		case VK_RIGHT:
-			g_ObjMissile.m_fSpeed += 10.0;
-			break;
-		case VK_LEFT:
-			g_ObjMissile.m_fSpeed -= 10.0;
-			break;
-		default:
-			break;
-		}
-		InvalidateRect(hWnd, NULL, TRUE);
 		break;
     case WM_COMMAND:
         {
@@ -207,13 +175,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             // 메뉴 선택을 구문 분석합니다.
             switch (wmId)
             {
-			case IDM_START:
-			{
-				OnCreate(hWnd);
-				plusEngine::fpOnLoop = OnApply;
-				plusEngine::fpOnRender = OnRender;
-			}
-				break;
             case IDM_ABOUT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
                 break;
@@ -230,8 +191,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
             // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다.
+			Graphics grp(hdc);
 
-
+			plusEngine::printf(&grp, 100, 50, L"start");
+			
             EndPaint(hWnd, &ps);
         }
         break;
