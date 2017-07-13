@@ -124,6 +124,30 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 irr::core::vector2df g_vObjPos;
 irr::f64 g_fObjRotation;
 
+void drawObject(Graphics *grp, irr::core::vector2df *pObjPoly, Pen *pen,irr::core::vector2df pos,irr::f64 fRotation)
+{
+		//irr::core::vector2df *pObjPoly = testObjPoly1;
+		Matrix tempMat;
+		grp->GetTransform(&tempMat);
+		grp->TranslateTransform(pos.X, pos.Y);
+		grp->RotateTransform(fRotation);
+
+		Matrix wMat;
+		grp->GetTransform(&wMat);
+		for (int i = 0; i < 4; i++) {
+			irr::core::vector2df start = pObjPoly[i];
+			irr::core::vector2df end = pObjPoly[(i + 1) % 4];
+			grp->DrawLine(pen, start.X, start.Y, end.X, end.Y);
+
+			PointF _start(start.X, start.Y);
+			wMat.TransformPoints(&_start);
+
+			plusEngine::printf(grp, start.X, start.Y, L"(%.1lf, %.1lf)", _start.X, _start.Y);
+		}
+		
+		grp->SetTransform(&tempMat);
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
@@ -192,26 +216,75 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			grp.DrawLine(&pen, 160, 0, 160, 240);
 			grp.DrawRectangle(&pen, 0, 0, 320, 240);
 			grp.SetTransform(&Matrix(1, 0, 0, 1, 160, 120));
-
+			
+			//대상물체 그리기
+			irr::core::vector2df obj1_pos(-100, -100);
+			irr::f64 obj1_rot = 30;
+			drawObject(&grp, testObjPoly1, &pen, obj1_pos, obj1_rot); //obj1
+			drawObject(&grp, testObjPoly1, &pen, g_vObjPos, g_fObjRotation); //obj2
+			
+			irr::core::vector2df worldpos_obj1[4];
+			irr::core::vector2df worldpos_obj2[4];
+			
+			//obj1 -> world
 			{
-				irr::core::vector2df *pObjPoly = testObjPoly1;
-				Matrix tempMat;
-				grp.GetTransform(&tempMat);
-				grp.TranslateTransform(g_vObjPos.X, g_vObjPos.Y);
-				grp.RotateTransform(g_fObjRotation);
-				
-				for (int i = 0; i < 4; i++) {
-					irr::core::vector2df start = testObjPoly1[i];
-					irr::core::vector2df end = testObjPoly1[(i + 1) % 4];
-					grp.DrawLine(&pen, start.X, start.Y, end.X, end.Y);
+				Matrix world_mat;
+				world_mat.Translate(obj1_pos.X, obj1_pos.Y);
+				world_mat.Rotate(obj1_rot);
 
-					plusEngine::printf(&grp, start.X, start.Y, L"(%.1lf, %.1lf)", start.X, start.Y);
+				for (int i = 0; i < 4; i++) {
+					PointF temp(testObjPoly1[i].X, testObjPoly1[i].Y);
+					world_mat.TransformPoints(&temp);
+					worldpos_obj1[i].X = temp.X;
+					worldpos_obj1[i].Y = temp.Y;
 				}
-				grp.SetTransform(&tempMat);
+			}
+			
+			//obj2 -> world
+			{
+				Matrix world_mat;
+				world_mat.Translate(g_vObjPos.X, g_vObjPos.Y);
+				world_mat.Rotate(g_fObjRotation);
+
+				for (int i = 0; i < 4; i++) {
+					PointF temp(testObjPoly1[i].X, testObjPoly1[i].Y);
+					world_mat.TransformPoints(&temp);
+					worldpos_obj2[i].X = temp.X;
+					worldpos_obj2[i].Y = temp.Y;
+				}
+			}
+			for (int i = 0; i < 4; i++) {
+				irr::core::line2df line1(worldpos_obj2[i], worldpos_obj2[(i + 1) % 4]);
+				for (int i = 0; i < 4; i++) {
+					irr::core::line2df line2;
+					line2.setLine(worldpos_obj1[i], worldpos_obj1[(i + 1) % 4]);
+					irr::core::vector2df colPt;
+					if (line1.intersectWith(line2, colPt)) {
+						grp.DrawRectangle(&pen, colPt.X - 4, colPt.Y - 4, 8.0, 8.0);
+					}
+				}
 			}
 
-			
+			/*
+			bool islnner = true;
+			for (int i = 0; i < 4; i++) {
+				irr::core::vector2df start = testObjPoly1[i];
+				irr::core::vector2df end = testObjPoly1[(i + 1) % 4];
 
+				irr::core::line2df testLine(start, end);
+				if (testLine.getPointOrientation(g_vObjPos) < 0) {
+					islnner = false;
+					break;
+				}
+			}
+
+			if (islnner) {
+				plusEngine::printf(&grp, g_vObjPos.X, g_vObjPos.Y - 8, L"안입니다.");
+			}
+			else {
+				plusEngine::printf(&grp, g_vObjPos.X, g_vObjPos.Y - 8, L"밖입니다.");
+			}
+			*/
 			grp.ResetTransform();
 
 			EndPaint(hWnd, &ps);

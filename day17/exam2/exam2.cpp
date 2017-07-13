@@ -212,11 +212,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				plusEngine::printf(&grp, g_vTestPt.X, g_vTestPt.Y - 14, L"밖입니다.");
 			}
 
-			
-			//검사
-			for (int i = 0; i < 3; i++) {
-
-			}
 
 			grp.ResetTransform();
             EndPaint(hWnd, &ps);
