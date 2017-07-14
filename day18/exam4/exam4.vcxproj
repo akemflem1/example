@@ -141,6 +141,8 @@
     <ClInclude Include="..\..\engine\plusEngine.h" />
     <ClInclude Include="exam4.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="ObjectBullet.h" />
+    <ClInclude Include="ObjectEffectBulletDie.h" />
     <ClInclude Include="ObjectPlayer.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -150,6 +152,8 @@
     <ClCompile Include="..\..\engine\plusEngine.cpp" />
     <ClCompile Include="exam4.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="ObjectBullet.cpp" />
+    <ClCompile Include="ObjectEffectBulletDie.cpp" />
     <ClCompile Include="ObjectPlayer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
