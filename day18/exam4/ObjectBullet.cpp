@@ -33,7 +33,8 @@ void ObjectBullet_OnApply(S_ObjectBullet *pThis, double fDelta)
 void ObjectBullet_OnRender(S_ObjectBullet *pThis, Graphics *pGrp)
 {
 	Pen pen(Color(0, 0, 0));
-	pGrp->DrawEllipse(&pen, pThis->m_vPosition.X - pThis->m_fSize/2, pThis->m_vPosition.Y-pThis->m_fSize/2, (int)pThis->m_fSize, (int)pThis->m_fSize);
+	//pGrp->DrawEllipse(&pen, pThis->m_vPosition.X - pThis->m_fSize/2, pThis->m_vPosition.Y-pThis->m_fSize/2, (int)pThis->m_fSize, (int)pThis->m_fSize);
+	pGrp->DrawImage(pThis->m_pImg, RectF(pThis->m_vPosition.X - 17 / 2, pThis->m_vPosition.Y - 17 / 2, 17, 17));
 }
 
 void ObjectBullet_Setup(S_ObjectBullet *pThis, irr::core::vector2df &vStartPos, irr::core::vector2df &vTargetPos,irr::f64 fVolumeSize,irr::f64 fVelocity)

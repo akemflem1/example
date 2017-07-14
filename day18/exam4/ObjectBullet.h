@@ -7,6 +7,7 @@ struct S_ObjectBullet
 	irr::f64 m_fVelocity;
 	irr::f64 m_fSize;
 	int m_nFSM;
+	Image *m_pImg;
 	double m_fLifeTime;
 };
 
