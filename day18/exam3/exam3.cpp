@@ -1,8 +1,8 @@
-// exam1.cpp : 응용 프로그램에 대한 진입점을 정의합니다.
+// exam3.cpp : 응용 프로그램에 대한 진입점을 정의합니다.
 //
 
 #include "stdafx.h"
-#include "exam1.h"
+#include "exam3.h"
 
 #define MAX_LOADSTRING 100
 
@@ -29,7 +29,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	plusEngine::startUpGdiPlus();
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_EXAM1, szWindowClass, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDC_EXAM3, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
     // 응용 프로그램 초기화를 수행합니다.
@@ -38,7 +38,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_EXAM1));
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_EXAM3));
 
     MSG msg;
 
@@ -73,10 +73,10 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.cbClsExtra     = 0;
     wcex.cbWndExtra     = 0;
     wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_EXAM1));
+    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_EXAM3));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_EXAM1);
+    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_EXAM3);
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -121,7 +121,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_DESTROY  - 종료 메시지를 게시하고 반환합니다.
 //
 //
-irr::core::vector2df g_vTest(100,-100);
+irr::core::vector2df g_vTest(0, 0);
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
@@ -147,7 +147,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 	}
 	InvalidateRect(hWnd, NULL, TRUE);
-		break;
+	break;
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
@@ -172,30 +172,36 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다.
 			Graphics grp(hdc);
 			Pen pen(Color(0, 0, 0));
+			Pen pen2(Color(255, 0, 0));
 			grp.DrawRectangle(&pen, 0, 0, 320, 240);
 			grp.DrawLine(&pen, 0, 120, 320, 120);
 			grp.DrawLine(&pen, 160, 0, 160, 240);
 
 			Matrix originMat(1, 0, 0, 1, 160, 120);
 			grp.SetTransform(&originMat);
-
-			irr::core::vector2df vTarget(100, 0);
-			grp.DrawRectangle(&pen, plusEngine::util::irr2Rect(g_vTest-irr::core::vector2df(4,4),irr::core::vector2df(8,8)));
-			grp.DrawLine(&pen, PointF(0, 0), plusEngine::util::irr2Point(g_vTest));
 			
-			grp.DrawRectangle(&pen, plusEngine::util::irr2Rect(vTarget - irr::core::vector2df(4, 4), irr::core::vector2df(8, 8)));
-			grp.DrawLine(&pen, PointF(0, 0), plusEngine::util::irr2Point(vTarget));
+			irr::core::vector2df targetPos(100, 100);
+
+			grp.DrawEllipse(&pen, g_vTest.X - 16, g_vTest.Y - 16, 32., 32.);
+			grp.DrawRectangle(&pen, g_vTest.X - 16, g_vTest.Y - 16, 32., 32.);
 			
-			irr::core::vector2df _vTest = g_vTest;
-			_vTest.normalize();
-			vTarget.normalize();
-
-			//외적구하기
-			irr::f64 fDot = vTarget.dotProduct(_vTest);
-
-			plusEngine::printf(&grp, 20, -20, L"%lf, %lf", fDot, 180 * (acosf(fDot)/3.14));
-
-			
+			//circle
+			irr::f64 fDist = (g_vTest - targetPos).getLength();
+			plusEngine::printf(&grp, 0, 0, L"%.3lf", fDist);
+			if (fDist < 32.0) {
+				grp.DrawEllipse(&pen2, targetPos.X - 16, targetPos.Y - 16, 32., 32.);
+			}
+			else {
+				grp.DrawEllipse(&pen, targetPos.X - 16, targetPos.Y - 16, 32., 32.);
+			}
+			//box
+			RectF a(targetPos.X - 16, targetPos.Y - 16, 32., 32.), b(g_vTest.X - 16, g_vTest.Y - 16, 32., 32.);
+			if (a.Intersect(b) == true) {
+				grp.DrawRectangle(&pen2, targetPos.X - 16, targetPos.Y - 16, 32., 32.);
+			}
+			else {
+				grp.DrawRectangle(&pen, targetPos.X - 16, targetPos.Y - 16, 32., 32.);
+			}
 
 			grp.ResetTransform();
 
