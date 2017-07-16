@@ -12,6 +12,7 @@ S_ObjectBullet *g_Bullet_List[MAX_BULLET_LIST];
 S_ObjectEffectBulletDie *g_BulletDie_List[MAX_EFFECT_BULLETDIE_LIST];
 
 Image *g_pImgSpaceShip;
+Image *g_pImgPoop;
 
 irr::f64 g_fAcctick = 0;
 // -1: 생성실패
@@ -21,13 +22,84 @@ int AddBullet()
 	for (i = 0; i < MAX_BULLET_LIST; i++) {
 		if (g_Bullet_List[i] == NULL) {
 			S_ObjectBullet *ptr = (S_ObjectBullet *)malloc(sizeof(S_ObjectBullet));
-			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 320 - 160, -120), g_objPlayer.m_vPosition, 8, rand() % 50 + 20);
+			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 320 - 160, -120), g_objPlayer.m_vPosition, 8, rand() % 100 + 70);
 			g_Bullet_List[i] = ptr;
 			return i;
 		}
 	}
 	return -1;
 }
+
+int AddBullet2()
+{
+	int i;
+	for (i = 0; i < MAX_BULLET_LIST; i++) {
+		if (g_Bullet_List[i] == NULL) {
+			S_ObjectBullet *ptr = (S_ObjectBullet *)malloc(sizeof(S_ObjectBullet));
+			ObjectBullet_Setup(ptr, irr::core::vector2df(160, rand()%240-120), g_objPlayer.m_vPosition, 8, rand() % 100 + 70);
+			g_Bullet_List[i] = ptr;
+			return i;
+		}
+	}
+	return -1;
+}
+
+int AddBullet3()
+{
+	int i;
+	for (i = 0; i < MAX_BULLET_LIST; i++) {
+		if (g_Bullet_List[i] == NULL) {
+			S_ObjectBullet *ptr = (S_ObjectBullet *)malloc(sizeof(S_ObjectBullet));
+			ObjectBullet_Setup(ptr, irr::core::vector2df(rand () % 320 - 160, 120), g_objPlayer.m_vPosition, 8, rand() % 100 + 70);
+			g_Bullet_List[i] = ptr;
+			return i;
+		}
+	}
+	return -1;
+}
+
+int AddBullet4()
+{
+	int i;
+	for (i = 0; i < MAX_BULLET_LIST; i++) {
+		if (g_Bullet_List[i] == NULL) {
+			S_ObjectBullet *ptr = (S_ObjectBullet *)malloc(sizeof(S_ObjectBullet));
+			ObjectBullet_Setup(ptr, irr::core::vector2df(-160, rand() % 240 - 120), g_objPlayer.m_vPosition, 8, rand() % 100 + 70);
+			g_Bullet_List[i] = ptr;
+			return i;
+		}
+	}
+	return -1;
+}
+
+int AddBullet5()
+{
+	int i;
+	for (i = 0; i < MAX_BULLET_LIST; i++) {
+		if (g_Bullet_List[i] == NULL) {
+			S_ObjectBullet *ptr = (S_ObjectBullet *)malloc(sizeof(S_ObjectBullet));
+			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 320 - 160, -120), g_objPlayer.m_vPosition, 8, rand() % 100 + 70);
+			g_Bullet_List[i] = ptr;
+			return i;
+		}
+	}
+	return -1;
+}
+
+int AddBullet6()
+{
+	int i;
+	for (i = 0; i < MAX_BULLET_LIST; i++) {
+		if (g_Bullet_List[i] == NULL) {
+			S_ObjectBullet *ptr = (S_ObjectBullet *)malloc(sizeof(S_ObjectBullet));
+			ObjectBullet_Setup(ptr, irr::core::vector2df(160, rand() % 240 - 120), g_objPlayer.m_vPosition, 8, rand() % 100 + 70);
+			g_Bullet_List[i] = ptr;
+			return i;
+		}
+	}
+	return -1;
+}
+
 
 int AddEffectBulletDie(irr::core::vector2df pos)
 {
@@ -82,6 +154,11 @@ void OnLoop(double fDelta)
 	if (g_fAcctick > 3.0) {
 		g_fAcctick = 0.0;
 		AddBullet();
+		AddBullet2();
+		AddBullet3();
+		AddBullet4();
+		AddBullet5();
+		AddBullet6();
 	}
 	//플레이어 처리
 	S_ObjectPlayer_OnApply(&g_objPlayer, fDelta);
@@ -160,7 +237,10 @@ void OnCreate(HWND hWnd)
 
 	g_pImgSpaceShip = new Image(L"../../res/spaceship_crop.png");
 	S_ObjectPlayer_Setup(&g_objPlayer, irr::core::vector2df(0, 0), g_pImgSpaceShip);
+	//g_pImgPoop = new Image(L"../../res/poop_small.png");
+	//ObjectBullet_Setup(&g_TestBullet, irr::core::vector2df(0, 100), g_objPlayer.m_vPosition, 8,30, g_pImgPoop);
 	//ObjectBullet_Setup(&g_TestBullet, irr::core::vector2df(-160, -120), g_objPlayer.m_vPosition, 8, 30);
+
 }
 
 void OnDestroy(HWND hWnd)
