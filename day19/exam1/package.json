@@ -1,0 +1,9 @@
+{
+  "name": "exam1",
+  "version": "0.0.0",
+  "description": "exam1",
+  "main": "app.js",
+  "author": {
+    "name": "KICT-02"
+  }
+}
