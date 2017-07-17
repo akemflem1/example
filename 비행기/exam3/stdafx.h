@@ -19,7 +19,7 @@
 
 // TODO: reference additional headers your program requires here
 #include "../../engine/irrlicht/include/irrlicht.h"
-#include "../../engine/myPlusEngine.h"
+#include "../../engine/plusEngine.h"
 #include "game.h"
 #include "player.h"
 #include "enemy.h"

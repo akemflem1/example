@@ -24,7 +24,7 @@ int AddBullet()
 			S_ObjectBullet *ptr = (S_ObjectBullet *)malloc(sizeof(S_ObjectBullet));
 			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 320 - 160, -200), g_objPlayer.m_vPosition, 8, rand() % 100 + 70);
 			g_Bullet_List[i] = ptr;
-			return i;
+			return i + 1;
 		}
 	}
 	return -1;
@@ -237,10 +237,8 @@ void OnCreate(HWND hWnd)
 
 	g_pImgSpaceShip = new Image(L"../../res/spaceship_crop.png");
 	S_ObjectPlayer_Setup(&g_objPlayer, irr::core::vector2df(0, 0), g_pImgSpaceShip);
-	//g_pImgPoop = new Image(L"../../res/poop_small.png");
+	g_pImgPoop = new Image(L"../../res/poop_small.png");
 	//ObjectBullet_Setup(&g_TestBullet, irr::core::vector2df(0, 100), g_objPlayer.m_vPosition, 8,30, g_pImgPoop);
-	//ObjectBullet_Setup(&g_TestBullet, irr::core::vector2df(-160, -120), g_objPlayer.m_vPosition, 8, 30);
-
 }
 
 void OnDestroy(HWND hWnd)

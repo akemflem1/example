@@ -20,9 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{91FDF449-9FC3-447F-82BD-596ABDE088A7}</ProjectGuid>
+    <ProjectGuid>{B233B98A-33C0-4B11-9F39-5A35F6021424}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>exam3</RootNamespace>
+    <RootNamespace>Avoid</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -138,27 +138,21 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\engine\myPlusEngine.h" />
     <ClInclude Include="..\..\engine\plusEngine.h" />
-    <ClInclude Include="bullet.h" />
-    <ClInclude Include="enemy.h" />
-    <ClInclude Include="exam3.h" />
-    <ClInclude Include="explosion.h" />
+    <ClInclude Include="Avoid.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="Poop.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\engine\myPlusEngine.cpp" />
     <ClCompile Include="..\..\engine\plusEngine.cpp" />
-    <ClCompile Include="bullet.cpp" />
-    <ClCompile Include="enemy.cpp" />
-    <ClCompile Include="exam3.cpp" />
-    <ClCompile Include="explosion.cpp" />
+    <ClCompile Include="Avoid.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="Poop.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -167,10 +161,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="exam3.rc" />
+    <ResourceCompile Include="Avoid.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="exam3.ico" />
+    <Image Include="Avoid.ico" />
     <Image Include="small.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
