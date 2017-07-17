@@ -7,4 +7,4 @@ udp_socket.on("message", function (msg, rinfo) {
 });
 
 strMsg = " Oh Bonhwan";
-udp_socket.send(Buffer(strMsg), 0, strMsg.length, 3333, '192.168.100.152');
+udp_socket.send(Buffer(strMsg), 0, strMsg.length, 3333, '192.168.100.151');

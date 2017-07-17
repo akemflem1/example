@@ -11,3 +11,4 @@ udp_socket.on("message", function (msg, rinfo) {
 });
 
 udp_socket.bind(3333);
+console.log('server building at 3333')
