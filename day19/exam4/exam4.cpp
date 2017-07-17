@@ -8,7 +8,7 @@
 int main()
 {
 	//wchar -> char
-	TCHAR *strMsgW = L"¾È³çÇÏ¼¼¿ä";
+	TCHAR *strMsgW = L"¾È³çÇÏ¼¼¿ä.";
 
 	_bstr_t convObj(strMsgW);
 
@@ -17,7 +17,7 @@ int main()
 	printf("%s \n", strMsgW_cnv);
 
 	//char ->wchar
-	char *strMsgC = "¹Ý°©½À´Ï´Ù";
+	char *strMsgC = "¹Ý°©½À´Ï´Ù.";
 	TCHAR szBufW[256];
 
 	mbstowcs(szBufW, strMsgC, 256);
