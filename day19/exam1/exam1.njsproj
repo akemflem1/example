@@ -28,6 +28,9 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="add5.js">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="app.js" />
     <Compile Include="app2.js">
       <SubType>Code</SubType>
@@ -38,6 +41,8 @@
     <Compile Include="app4.js">
       <SubType>Code</SubType>
     </Compile>
+    <Content Include="binding.gyp" />
+    <Content Include="hello.cpp" />
     <Content Include="package.json" />
     <Content Include="README.md" />
   </ItemGroup>

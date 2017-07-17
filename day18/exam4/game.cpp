@@ -22,7 +22,7 @@ int AddBullet()
 	for (i = 0; i < MAX_BULLET_LIST; i++) {
 		if (g_Bullet_List[i] == NULL) {
 			S_ObjectBullet *ptr = (S_ObjectBullet *)malloc(sizeof(S_ObjectBullet));
-			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 320 - 160, -120), g_objPlayer.m_vPosition, 8, rand() % 100 + 70);
+			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 320 - 160, -200), g_objPlayer.m_vPosition, 8, rand() % 100 + 70);
 			g_Bullet_List[i] = ptr;
 			return i;
 		}
@@ -36,7 +36,7 @@ int AddBullet2()
 	for (i = 0; i < MAX_BULLET_LIST; i++) {
 		if (g_Bullet_List[i] == NULL) {
 			S_ObjectBullet *ptr = (S_ObjectBullet *)malloc(sizeof(S_ObjectBullet));
-			ObjectBullet_Setup(ptr, irr::core::vector2df(160, rand()%240-120), g_objPlayer.m_vPosition, 8, rand() % 100 + 70);
+			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 320 - 160, -200), g_objPlayer.m_vPosition, 8, rand() % 100 + 70);
 			g_Bullet_List[i] = ptr;
 			return i;
 		}
@@ -50,7 +50,7 @@ int AddBullet3()
 	for (i = 0; i < MAX_BULLET_LIST; i++) {
 		if (g_Bullet_List[i] == NULL) {
 			S_ObjectBullet *ptr = (S_ObjectBullet *)malloc(sizeof(S_ObjectBullet));
-			ObjectBullet_Setup(ptr, irr::core::vector2df(rand () % 320 - 160, 120), g_objPlayer.m_vPosition, 8, rand() % 100 + 70);
+			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 320 - 160, -200), g_objPlayer.m_vPosition, 8, rand() % 100 + 70);
 			g_Bullet_List[i] = ptr;
 			return i;
 		}
@@ -64,7 +64,7 @@ int AddBullet4()
 	for (i = 0; i < MAX_BULLET_LIST; i++) {
 		if (g_Bullet_List[i] == NULL) {
 			S_ObjectBullet *ptr = (S_ObjectBullet *)malloc(sizeof(S_ObjectBullet));
-			ObjectBullet_Setup(ptr, irr::core::vector2df(-160, rand() % 240 - 120), g_objPlayer.m_vPosition, 8, rand() % 100 + 70);
+			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 320 - 160, -200), g_objPlayer.m_vPosition, 8, rand() % 100 + 70);
 			g_Bullet_List[i] = ptr;
 			return i;
 		}
@@ -78,7 +78,7 @@ int AddBullet5()
 	for (i = 0; i < MAX_BULLET_LIST; i++) {
 		if (g_Bullet_List[i] == NULL) {
 			S_ObjectBullet *ptr = (S_ObjectBullet *)malloc(sizeof(S_ObjectBullet));
-			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 320 - 160, -120), g_objPlayer.m_vPosition, 8, rand() % 100 + 70);
+			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 320 - 160, -200), g_objPlayer.m_vPosition, 8, rand() % 100 + 70);
 			g_Bullet_List[i] = ptr;
 			return i;
 		}
@@ -92,7 +92,7 @@ int AddBullet6()
 	for (i = 0; i < MAX_BULLET_LIST; i++) {
 		if (g_Bullet_List[i] == NULL) {
 			S_ObjectBullet *ptr = (S_ObjectBullet *)malloc(sizeof(S_ObjectBullet));
-			ObjectBullet_Setup(ptr, irr::core::vector2df(160, rand() % 240 - 120), g_objPlayer.m_vPosition, 8, rand() % 100 + 70);
+			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 320 - 160, -200), g_objPlayer.m_vPosition, 8, rand() % 100 + 70);
 			g_Bullet_List[i] = ptr;
 			return i;
 		}
@@ -190,11 +190,11 @@ void OnRender(double fDelta,Graphics *pGrp)
 	}
 	Pen pen(Color(0, 0, 0));
 	//Pen pen2(Color(255, 0, 0));
-	pGrp->DrawRectangle(&pen, 0, 0, 320, 240);
-	pGrp->DrawLine(&pen, 0, 120, 320, 120);
-	pGrp->DrawLine(&pen, 160, 0, 160, 240);
+	pGrp->DrawRectangle(&pen, 0, 0, 320, 400);
+	pGrp->DrawLine(&pen, 0, 200, 320, 200);
+	pGrp->DrawLine(&pen, 160, 0, 160, 400);
 
-	Matrix originMat(1, 0, 0, 1, 160, 120);
+	Matrix originMat(1, 0, 0, 1, 160, 200);
 	pGrp->SetTransform(&originMat);
 
 

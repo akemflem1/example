@@ -22,11 +22,11 @@ void S_ObjectPlayer_OnApply(S_ObjectPlayer *pThis, double fDelta)
 	{
 		pThis->m_vPosition.X += 1;
 	}
-	if (pThis->m_vPosition.Y > 120 - 35 / 2)
+	if (pThis->m_vPosition.Y > 200 - 35 / 2)
 	{
 		pThis->m_vPosition.Y -= 1;
 	}
-	if (pThis->m_vPosition.Y < -120 + 35 / 2)
+	if (pThis->m_vPosition.Y < -200 + 35 / 2)
 	{
 		pThis->m_vPosition.Y += 1;
 	}
