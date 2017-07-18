@@ -42,7 +42,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	MSG msg;
 
 	// 기본 메시지 루프입니다.
-	plusEngine::GDIPLUS_Loop(msg, Rect(0, 0, 320, 400));
+	plusEngine::GDIPLUS_Loop(msg, Rect(0, 0, 260, 300));
 	return (int)msg.wParam;
 }
 
