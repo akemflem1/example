@@ -37,9 +37,8 @@ void ObjectBullet_OnRender(S_ObjectBullet *pThis, Graphics *pGrp)
 	pGrp->DrawImage(pThis->m_pImg, RectF(pThis->m_vPosition.X - 17 / 2, pThis->m_vPosition.Y - 17 / 2, 17, 17));
 }
 
-void ObjectBullet_Setup(S_ObjectBullet *pThis, irr::core::vector2df &vStartPos, irr::core::vector2df &vTargetPos,irr::f64 fVolumeSize,irr::f64 fVelocity, Image* img)
+void ObjectBullet_Setup(S_ObjectBullet *pThis, irr::core::vector2df &vStartPos, irr::core::vector2df &vTargetPos,irr::f64 fVelocity, Image* img)
 {
-	pThis->m_fSize = fVolumeSize;
 	pThis->m_fVelocity = fVelocity;
 	pThis->m_nFSM = 0;
 	pThis->m_vPosition = vStartPos;

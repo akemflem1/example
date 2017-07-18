@@ -34,7 +34,7 @@ void S_ObjectPlayer_OnApply(S_ObjectPlayer *pThis, double fDelta)
 
 void S_ObjectPlayer_OnRender(S_ObjectPlayer *pThis, Graphics *pGrp)
 {
-	pGrp->DrawImage(pThis->m_pImg, RectF(pThis->m_vPosition.X - 31 / 2, pThis->m_vPosition.Y - 52/ 2, 31, 52));
+	pGrp->DrawImage(pThis->m_pImg, RectF(pThis->m_vPosition.X - 30 / 2, pThis->m_vPosition.Y - 48/ 2, 30, 48));
 }
 
 void S_ObjectPlayer_Setup(S_ObjectPlayer *pThis, irr::core::vector2df &startPos, Image *pImg)

@@ -13,4 +13,4 @@ struct S_ObjectBullet
 
 extern void ObjectBullet_OnApply(S_ObjectBullet *pThis, double fDelta);
 extern void ObjectBullet_OnRender(S_ObjectBullet *pThis, Graphics *pGrp);
-extern void ObjectBullet_Setup(S_ObjectBullet *pThis, irr::core::vector2df &vStartPos, irr::core::vector2df &vTargetPos, irr::f64 fVolumeSize, irr::f64 fVelocity, Image* img);
+extern void ObjectBullet_Setup(S_ObjectBullet *pThis, irr::core::vector2df &vStartPos, irr::core::vector2df &vTargetPos, irr::f64 fVelocity, Image* img);

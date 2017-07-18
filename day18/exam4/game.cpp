@@ -19,12 +19,6 @@ extern S_ObjectBullet;
 irr::f64 g_fAcctick = 0;
 // -1: 생성실패
 
-int Count(S_ObjectBullet **g_Bullet_List, int size) {
-	int count = 0;
-	for (int i = 0; i < size; i++)
-		count += !!g_Bullet_List[i];
-	return count;
-}
 
 int AddBullet()
 {
@@ -32,11 +26,11 @@ int AddBullet()
 	for (i = 0; i < MAX_BULLET_LIST; i++) {
 		if (g_Bullet_List[i] == NULL) {
 			S_ObjectBullet *ptr = (S_ObjectBullet *)malloc(sizeof(S_ObjectBullet));
-			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 260 - 130, -150), g_objPlayer.m_vPosition, 8, rand() % 100 + 70,g_pImgPoop);
+			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 260 - 130, -150), g_objPlayer.m_vPosition, rand() % 100 + 70,g_pImgPoop);
 			g_Bullet_List[i] = ptr;
-			return i + 1;
+			return i;
 		}
-	}
+	}	
 	return -1;
 }
 
@@ -46,7 +40,7 @@ int AddBullet2()
 	for (i = 0; i < MAX_BULLET_LIST; i++) {
 		if (g_Bullet_List[i] == NULL) {
 			S_ObjectBullet *ptr = (S_ObjectBullet *)malloc(sizeof(S_ObjectBullet));
-			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 260 - 130, -150), g_objPlayer.m_vPosition, 8, rand() % 100 + 70, g_pImgPoop);
+			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 260 - 130, -150), g_objPlayer.m_vPosition,rand() % 100 + 70, g_pImgPoop);
 			g_Bullet_List[i] = ptr;
 			return i;
 		}
@@ -60,7 +54,7 @@ int AddBullet3()
 	for (i = 0; i < MAX_BULLET_LIST; i++) {
 		if (g_Bullet_List[i] == NULL) {
 			S_ObjectBullet *ptr = (S_ObjectBullet *)malloc(sizeof(S_ObjectBullet));
-			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 260 - 130, -150), g_objPlayer.m_vPosition, 8, rand() % 100 + 70, g_pImgPoop);
+			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 260 - 130, -150), g_objPlayer.m_vPosition,rand() % 100 + 70, g_pImgPoop);
 			g_Bullet_List[i] = ptr;
 			return i;
 		}
@@ -74,7 +68,7 @@ int AddBullet4()
 	for (i = 0; i < MAX_BULLET_LIST; i++) {
 		if (g_Bullet_List[i] == NULL) {
 			S_ObjectBullet *ptr = (S_ObjectBullet *)malloc(sizeof(S_ObjectBullet));
-			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 260 - 130, -150), g_objPlayer.m_vPosition, 8, rand() % 100 + 70, g_pImgPoop);
+			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 260 - 130, -150), g_objPlayer.m_vPosition,rand() % 100 + 70, g_pImgPoop);
 			g_Bullet_List[i] = ptr;
 			return i;
 		}
@@ -88,7 +82,7 @@ int AddBullet5()
 	for (i = 0; i < MAX_BULLET_LIST; i++) {
 		if (g_Bullet_List[i] == NULL) {
 			S_ObjectBullet *ptr = (S_ObjectBullet *)malloc(sizeof(S_ObjectBullet));
-			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 260 - 130, -150), g_objPlayer.m_vPosition, 8, rand() % 100 + 70, g_pImgPoop);
+			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 260 - 130, -150), g_objPlayer.m_vPosition, rand() % 100 + 70, g_pImgPoop);
 			g_Bullet_List[i] = ptr;
 			return i;
 		}
@@ -102,7 +96,7 @@ int AddBullet6()
 	for (i = 0; i < MAX_BULLET_LIST; i++) {
 		if (g_Bullet_List[i] == NULL) {
 			S_ObjectBullet *ptr = (S_ObjectBullet *)malloc(sizeof(S_ObjectBullet));
-			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 260 - 130, -150), g_objPlayer.m_vPosition, 8, rand() % 100 + 70, g_pImgPoop);
+			ObjectBullet_Setup(ptr, irr::core::vector2df(rand() % 260 - 130, -150), g_objPlayer.m_vPosition, rand() % 100 + 70, g_pImgPoop);
 			g_Bullet_List[i] = ptr;
 			return i;
 		}
@@ -161,7 +155,7 @@ void OnLoop(double fDelta)
 	ClearDeadEffecBulletDieObj();
 	//총알발사
 	g_fAcctick += fDelta;
-	if (g_fAcctick > 3.0) {
+	if (g_fAcctick > 2.0) {
 		g_fAcctick = 0.0;
 		AddBullet();
 		AddBullet2();
@@ -200,8 +194,8 @@ void OnRender(double fDelta,Graphics *pGrp)
 	}
 	Pen pen(Color(0, 0, 0));
 	//Pen pen2(Color(255, 0, 0));
-	pGrp->DrawRectangle(&pen, 0, 0, 260, 300);
-	//pGrp->DrawLine(&pen, 0, 150, 320, 150);
+	pGrp->DrawRectangle(&pen, 0, 0, 259, 299);
+	//pGrp->DrawLine(&pen, 0, 299, 320, 299);
 	//pGrp->DrawLine(&pen, 160, 0, 160, 300);
 
 	Matrix originMat(1, 0, 0, 1, 130, 150);
@@ -226,7 +220,6 @@ void OnRender(double fDelta,Graphics *pGrp)
 	}
 
 	pGrp->ResetTransform();
-	int n_bullets = Count(g_Bullet_List, MAX_BULLET_LIST);
 }
 
 void OnCreate(HWND hWnd)
@@ -247,7 +240,7 @@ void OnCreate(HWND hWnd)
 	}
 
 	g_pImgSpaceShip = new Image(L"../../res/zola.png");
-	S_ObjectPlayer_Setup(&g_objPlayer, irr::core::vector2df(0, 120), g_pImgSpaceShip);
+	S_ObjectPlayer_Setup(&g_objPlayer, irr::core::vector2df(0, 125), g_pImgSpaceShip);
 	g_pImgPoop = new Image(L"../../res/poop_small.png");
 	//ObjectBullet_Setup(&g_TestBullet, irr::core::vector2df(0, 100), g_objPlayer.m_vPosition, 8,30, g_pImgPoop);
 }
