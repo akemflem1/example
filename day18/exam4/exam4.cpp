@@ -5,7 +5,6 @@
 #include "exam4.h"
 
 #define MAX_LOADSTRING 100
-#define ID_TIMER 6974
 
 // 전역 변수:
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
@@ -127,13 +126,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	break;
 	case WM_CREATE:
 	{
-		hTimer = (HANDLE)SetTimer(hWnd, ID_TIMER, 1000, NULL);
+		hTimer = (HANDLE)SetTimer(hWnd, 1, 1000, NULL);
 	}
 	break;
 	case WM_TIMER:
 	{
 		OnCreate(hWnd);
-		KillTimer(hWnd, ID_TIMER);
+		KillTimer(hWnd, 1);
 	}
 	break;
 	
